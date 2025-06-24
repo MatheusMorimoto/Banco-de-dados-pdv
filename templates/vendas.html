@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vendas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendas.css') }}">
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li class="dropdown">
+        <a href="{{ url_for('vendas') }}">Vendas</a>                
+      </li>
+
+      <li class="dropdown">
+        <a href="{{ url_for('cadastro') }}">Cadastro de produtos</a>
+      </li>
+      
+      <li class="dropdown">
+        <a href="#">Relatório</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Vendas</a></li>
+          <li><a href="#">Cálculo do estoque</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="vendas-container">
+    <!-- Produtos disponíveis -->
+    <div class="produtos-disponiveis">
+      <!-- Produtos carregados via JavaScript com os botões:
+           <button class="btn-adicionar" data-id="...">Adicionar</button>
+           serão inseridos aqui -->
+    </div>
+
+    <!-- Carrinho de venda -->
+    <div class="carrinho-venda">
+
+      <ul id="lista-carrinho"></ul>
+
+      <div class="acoes-venda">
+        <button onclick="cancelarVenda()">Cancelar Venda</button>
+        <button onclick="abrirPopupPagamento()">Finalizar Venda</button>
+      </div>
+
+      <div id="popup-pagamento" class="popup" style="display:none;">
+        <h3>Forma de pagamento</h3>
+        <select id="formaPagamento" onchange="verificarForma()">
+          <option value="credito">Cartão de Crédito</option>
+          <option value="debito">Cartão de Débito</option>
+          <option value="pix">Pix</option>
+          <option value="dinheiro">Dinheiro</option>
+        </select>
+
+        <div id="bandeiras" style="margin-top:10px;">
+          <p>Bandeiras aceitas: Visa, Mastercard, Elo, Amex, Hipercard</p>
+        </div>
+
+        <div id="dinheiro-section" style="display:none;">
+          <label>Valor recebido:</label>
+          <input type="number" id="valorRecebido" oninput="calcularTroco()" />
+          <p>Troco: R$ <span id="troco">0.00</span></p>
+        </div>
+
+        <button onclick="finalizarVenda()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='vendas.js') }}"></script>
+</body>
+</html>

@@ -29,6 +29,11 @@
       <label for="name">Nome:</label>
       <input type="text" id="name" required>
 
+      <label for="editNfNumber">Número da Nota Fiscal:</label>
+      <input type="text" id="editNfNumber" required>
+      <label for="editNfDate">Data da Nota Fiscal:</label>
+      <input type="date" id="editNfDate" required>
+
       <label for="barcode">Código de barras:</label>
       <input type="number" id="barcode" required>
 
@@ -106,7 +111,7 @@
     <div class="popup">
       <h3>Alterar Produto</h3>
       <label for="editId">ID:</label>
-      <input type="number" id="editId" placeholder="Opcional">
+      <input type="number" id="editId" placeholder="Opcional">      
       <label for="editBarcode">Código de Barras:</label>
       <input type="number" id="editBarcode" placeholder="Opcional">
       <button onclick="buscarProdutoParaEdicao()">Buscar</button>

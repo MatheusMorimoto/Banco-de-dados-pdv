@@ -1,4 +1,12 @@
-/* Estrutura geral do menu */
+/* Reset e corpo */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
+}
+
+/* Menu lateral fixo */
 nav {
   position: fixed;
   top: 0;
@@ -12,15 +20,6 @@ nav {
   border-bottom-right-radius: 20px;
 }
 
-/* Corpo da página */
-body {
-  margin: 0;
-  padding-left: 240px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
-}
-
-/* Menu */
 nav ul {
   list-style: none;
   padding: 0;
@@ -35,6 +34,8 @@ nav ul li a {
   border: 2px solid gold;
   background-color: transparent;
   transition: all 0.3s ease;
+  text-decoration: none;
+  margin-bottom: 10px;
 }
 
 nav ul li a:hover {
@@ -52,134 +53,47 @@ nav ul li:hover .dropdown-menu {
   display: block;
 }
 
-/* Layout principal */
-/* Estrutura geral do menu */
-nav {
+/* Leitor de código de barras fixo no topo da área de vendas */
+.leitor-container {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 220px;
-  height: 100vh;
-  background-color: snow;
-  padding-top: 20px;
-  z-index: 1000;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  left: 240px;
+  width: calc(100% - 240px);
+  background-color: #fff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 900;
+  padding: 18px 32px 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
-/* Corpo da página */
-body {
-  margin: 0;
-  padding-left: 240px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
+.leitor-container label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #444;
 }
 
-/* Menu */
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+#leitor-codigo {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 18px;
+  font-size: 1.2rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-left: 12px;
 }
 
-nav ul li a {
-  color: black;
-  padding: 10px 15px;
-  display: block;
-  border-radius: 12px;
-  border: 2px solid gold;
-  background-color: transparent;
-  transition: all 0.3s ease;
-}
-
-nav ul li a:hover {
-  background-color: #e9ece9;
-}
-
-nav ul li .dropdown-menu {
-  display: none;
-  background-color: #f7f1f1;
-  padding-left: 15px;
-  margin-top: 5px;
-}
-
-nav ul li:hover .dropdown-menu {
-  display: block;
-}
-
-/* Layout principal */
+/* Layout principal: produtos à esquerda, carrinho à direita */
 .vendas-container {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: nowrap;
-  margin: 100px 40px 0 240px;
-  gap: 20px;
-}
-
-/* Produtos disponíveis */
-/* Estrutura geral do menu */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 220px;
-  height: 100vh;
-  background-color: snow;
-  padding-top: 20px;
-  z-index: 1000;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-/* Corpo da página */
-body {
-  margin: 0;
-  padding-left: 240px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
-}
-
-/* Menu */
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-nav ul li a {
-  color: black;
-  padding: 10px 15px;
-  display: block;
-  border-radius: 12px;
-  border: 2px solid gold;
-  background-color: transparent;
-  transition: all 0.3s ease;
-}
-
-nav ul li a:hover {
-  background-color: #e9ece9;
-}
-
-nav ul li .dropdown-menu {
-  display: none;
-  background-color: #f7f1f1;
-  padding-left: 15px;
-  margin-top: 5px;
-}
-
-nav ul li:hover .dropdown-menu {
-  display: block;
-}
-
-/* Layout principal */
-.vendas-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  margin: 100px 40px 0 240px;
-  gap: 20px;
+  margin: 90px 40px 0 240px; /* espaço para menu e leitor */
+  gap: 32px;
 }
 
 /* Produtos disponíveis */
@@ -189,455 +103,178 @@ nav ul li:hover .dropdown-menu {
   gap: 30px;
   background-color: #fff;
   padding: 40px;
-  border-radius: 132px;
-  width: calc(100% - 440px);
-  box-sizing: border-box;
-  min-height: 100vh;
-  margin-left: -260px;
-  margin-top: -50px;
-}
-
-/* Produto individual */
-.produto,
-.produto-item {
-  flex: 1 1 300px;
-  height: 200px;
-  border: 2px solid #ccc;
-  border-radius: 20px;
-  padding: 80px;
-  margin: 10px;
-  background-color: #f0f0f0;
-  text-align: center;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-/* Campo de quantidade */
-input[type="number"].quantidade {
-  width: 180px;
-  height: 80px;
-  font-size: 18px;
-  border-radius: 10px;
-  padding: 8px 22px;
-  border: 2px solid #ccc;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-/* Botões dentro dos produtos */
-.produto button,
-.produto-item button {
-  padding: 14px 24px;
-  font-size: 16px;
-  border-radius: 30px;
-  background-color: gold;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: auto;
-  align-self: stretch;
-}
-
-.produto button:hover,
-.produto-item button:hover {
-  background-color: goldenrod;
-}
-
-/* Carrinho de vendas */
-.carrinho-venda {
-  width: 400px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #e7e3e3;
-  border-radius: 55px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-height: 80vh;
-  box-sizing: border-box;
-  position: sticky;
-  top: 100px;
-  align-self: flex-start;
-  z-index: 1;
-}
-
-/* Lista de itens no carrinho */
-#lista-carrinho {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  font-family: monospace;
-  background-color: #fff;
-  border-radius: 8px;
-  max-height: 90vh;
-  min-height: 200px;
-}
-
-/* Botões de ação (venda) */
-.acoes-venda {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin-top: 10px;
-}
-
-/* Ações fixas do carrinho */
-.acoes-carrinho {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: auto;
-}
-
-.btn-cancelar,
-.btn-finalizar {
-  flex: 1;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-cancelar {
-  background-color: #ccc;
-}
-
-.btn-finalizar {
-  background-color: gold;
-}
-
-.btn-finalizar:hover {
-  background-color: goldenrod;
-}
-
-/* Campo fixo para leitor de código */
-.leitor-container {
-  position: fixed;
-  top: 0;
-  left: 240px;
-  width: calc(100% - 240px);
-  padding: 1px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  font-family: Arial, sans-serif;
-  z-index: 1001;
-}
-
-#leitor-codigo {
-  width: 300px;
-  padding: 32px 34px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-/* Produto individual */
-.produto,
-.produto-item {
-  flex: 1 1 300px;
-  height: 200px;
-  border: 2px solid #ccc;
-  border-radius: 20px;
-  padding: 80px;
-  margin: 10px;
-  background-color: #f0f0f0;
-  text-align: center;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-/* Campo de quantidade */
-input[type="number"].quantidade {
-  width: 180px;
-  height: 80px;
-  font-size: 18px;
-  border-radius: 10px;
-  padding: 8px 22px;
-  border: 2px solid #ccc;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-/* Botões dentro dos produtos */
-.produto button,
-.produto-item button {
-  padding: 14px 24px;
-  font-size: 16px;
-  border-radius: 30px;
-  background-color: gold;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: auto;
-  align-self: stretch;
-}
-
-.produto button:hover,
-.produto-item button:hover {
-  background-color: goldenrod;
-}
-
-/* Carrinho de vendas */
-.carrinho-venda {
-  width: 400px; /* largura fixa */
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 20px; /* removido padding negativo */
-  background-color: #e7e3e3;
-  border-radius: 55px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  max-height: 80vh;
-  box-sizing: border-box;
-  position: sticky;
-  top: 100px;
-  align-self: flex-start;
-  z-index: 1;
-}
-
-/* Lista de itens no carrinho */
-#lista-carrinho {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  font-family: monospace;
-  background-color: #fff;
-  border-radius: 8px;
-  max-height: 90vh;
-  min-height: 200px;
-}
-
-
-/* Botões de ação (venda) */
-.acoes-venda {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin-top: 10px;
-}
-
-/* Ações fixas do carrinho */
-.acoes-carrinho {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: auto;
-}
-
-.btn-cancelar,
-.btn-finalizar {
-  flex: 1;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-cancelar {
-  background-color: #ccc;
-}
-
-.btn-finalizar {
-  background-color: gold;
-}
-
-.btn-finalizar:hover {
-  background-color: goldenrod;
-}
-
-/* Campo fixo para leitor de código */
-.leitor-container {
-  position: fixed;
-  top: 0;
-  left: 1340px;
-  width: calc(100% - 240px);
-  padding: 1px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  font-family: Arial, sans-serif;
-  z-index: 1001;
-}
-
-#leitor-codigo {
-  width: 100%;
-  padding: 2px 14px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
-
-.produtos-disponiveis {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 por linha para dar espaço pro carrinho */
-  gap: 30px;
-  background-color: #fff;
-  padding: 40px;
   border-radius: 32px;
   width: 100%;
   box-sizing: border-box;
-  min-height: 100vh;
+  min-height: 80vh;
+  flex: 2;
+  min-width: 350px;
 }
 
 /* Produto individual */
-.produto,
 .produto-item {
-  flex: 1 1 300px;
-  height: 200px;
-  border: 2px solid #ccc;
+  background: #f7f7f7;
   border-radius: 20px;
-  padding: 80px;
-  margin: 10px;
-  background-color: #f0f0f0;
-  text-align: center;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 8px rgba(0,0,0,0.04);
+  padding: 32px 24px 24px 24px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
+  min-width: 220px;
 }
 
-/* Campo de quantidade */
-input[type="number"].quantidade {
-  width: 180px;
-  height: 80px;
-  font-size: 18px;
-  border-radius: 10px;
-  padding: 8px 22px;
-  border: 2px solid #ccc;
-  box-sizing: border-box;
-  margin-top: 10px;
+.produto-item h3 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-/* Botões dentro dos produtos */
-.produto button,
-.produto-item button {
-  padding: 14px 24px;
+.produto-item p {
+  margin: 4px 0;
   font-size: 16px;
-  border-radius: 30px;
-  background-color: gold;
-  color: black;
+}
+
+input[type="number"].quantidade {
+  width: 60px;
+  padding: 6px 8px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.produto-item button {
+  width: 100%;
+  padding: 14px 0;
+  background: gold;
+  color: #222;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: auto;
-  align-self: stretch;
+  margin-top: 10px;
+  transition: background 0.2s;
 }
 
-.produto button:hover,
 .produto-item button:hover {
-  background-color: goldenrod;
+  background: #ffe066;
 }
 
-/* Carrinho de vendas */
+/* Carrinho de vendas à direita, ocupando o máximo possível */
 .carrinho-venda {
   flex: 1;
+  width: 100%;
+  min-width: 350px;
   display: flex;
   flex-direction: column;
-  padding: -200px;
+  padding: 20px;
   background-color: #e7e3e3;
-  border-radius: 55px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  min-width: 350px;
+  border-radius: 32px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-height: 80vh;
   box-sizing: border-box;
-  position: sticky;
-  top: -3px;
   align-self: flex-start;
-  margin-left: 15px;
+  margin-top: 0;
+  position: sticky;
+  top: 90px; /* acompanha o leitor */
   z-index: 1;
 }
 
-/* Lista de itens no carrinho */
 #lista-carrinho {
   flex: 1;
   overflow-y: auto;
-  padding: 60px;
+  padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   font-family: monospace;
   background-color: #fff;
   border-radius: 8px;
-  max-height: 90vh;
-  min-height: 200px; /* 🟢 garante visibilidade mesmo vazio */
+  max-height: 50vh;
+  min-height: 120px;
 }
 
-/* Botões de ação (venda) */
-.acoes-venda {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin-top: 10px;
+/* Deixa descrição e quantidade mais próximas e compactas */
+#lista-carrinho, #lista-carrinho pre, #lista-carrinho div {
+  letter-spacing: -0.5px;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
 }
 
-/* Ações fixas do carrinho */
+#lista-carrinho pre {
+  margin-bottom: 2px;
+}
+
+/* Botões de ação do carrinho */
 .acoes-carrinho {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  margin-top: auto;
+  margin-top: 10px;
 }
 
-.btn-cancelar,
-.btn-finalizar {
+.btn-cancelar, .btn-finalizar {
   flex: 1;
-  padding: 14px 20px;
+  padding: 12px 0;
+  border: none;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 10px;
-  border: none;
   cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 10px;
 }
 
 .btn-cancelar {
-  background-color: #ccc;
+  background: #bbb;
+  color: #222;
 }
 
 .btn-finalizar {
-  background-color: gold;
+  background: gold;
+  color: #222;
+  margin-right: 0;
+}
+
+.btn-cancelar:hover {
+  background: #999;
 }
 
 .btn-finalizar:hover {
-  background-color: goldenrod;
+  background: #ffe066;
 }
 
-.leitor-container {
-  position: fixed;
-  top: 0;
-  left: 240px;
-  width: 1090px;
-  padding: 1px;
-  background-color: #fff;
+/* Popup de pagamento */
+.popup {
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  font-family: Arial, sans-serif;
-  z-index: 1001;
+  box-shadow: 0 0 8px rgba(0,0,0,0.08);
+  padding: 20px;
+  margin-top: 20px;
 }
 
-#leitor-codigo {
-  width: 100%;
-  padding: 2px 14px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
+/* Responsividade básica */
+@media (max-width: 1200px) {
+  .vendas-container {
+    flex-direction: column;
+    margin-right: 10px;
+  }
+  .carrinho-venda {
+    width: 100%;
+    max-width: 100vw;
+    position: static;
+    margin-top: 24px;
+  }
+  .produtos-disponiveis {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .leitor-container {
+    left: 0;
+    width: 100vw;
+    margin-left: 0;
+    border-radius: 0;
+  }
 }

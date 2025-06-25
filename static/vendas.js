@@ -3,6 +3,7 @@ let produtosDisponiveis = [];
 let pagina = 0;
 const porPagina = 12;
 
+// Carrega produtos do backend
 fetch('/api/produtos')
   .then(response => response.json())
   .then(produtos => {
@@ -41,14 +42,15 @@ fetch('/api/produtos')
     renderizarProdutos(pagina);
     pagina++;
 
+    // Clique no botão "Adicionar"
     container.addEventListener('click', function (e) {
       if (e.target && e.target.classList.contains('btn-adicionar')) {
         const id = parseInt(e.target.dataset.id);
-        console.log('Clique no botão Adicionar:', id);
-        adicionarAoCarrinhoPorId(id);
+        adicionarAoCarrinhoPorId(id, null); // null para pegar do input
       }
     });
 
+    // Scroll infinito para carregar mais produtos
     container.addEventListener('scroll', () => {
       if (container.scrollTop + container.clientHeight >= container.scrollHeight - 5) {
         if (pagina * porPagina < produtosDisponiveis.length) {
@@ -63,7 +65,8 @@ fetch('/api/produtos')
     alert('Não foi possível carregar os produtos do banco.');
   });
 
-function adicionarAoCarrinhoPorId(id, quantidade = 1) {
+// Adiciona produto ao carrinho
+function adicionarAoCarrinhoPorId(id, quantidade = null) {
   console.log('adicionarAoCarrinhoPorId chamada - ID:', id);
   const produto = produtosDisponiveis.find(p => p.id === id);
   if (!produto) {
@@ -71,9 +74,14 @@ function adicionarAoCarrinhoPorId(id, quantidade = 1) {
     return;
   }
 
-  const input = document.getElementById(`quantidade-${id}`);
-  if (input && !isNaN(parseInt(input.value))) {
-    quantidade = parseInt(input.value);
+  // Só pega do input se quantidade for null (caso do botão)
+  if (quantidade === null) {
+    const input = document.getElementById(`quantidade-${id}`);
+    if (input && !isNaN(parseInt(input.value))) {
+      quantidade = parseInt(input.value);
+    } else {
+      quantidade = 1;
+    }
   }
 
   const existente = carrinho.find(item => item.id === id);
@@ -81,13 +89,18 @@ function adicionarAoCarrinhoPorId(id, quantidade = 1) {
     existente.quantidade += quantidade;
     console.log(`Quantidade atualizada: ${existente.nome} = ${existente.quantidade}`);
   } else {
-    carrinho.push({ ...produto, quantidade });
+    carrinho.push({ 
+      ...produto, 
+      quantidade, 
+      preco_unitario_venda: parseFloat(produto.preco_unitario_venda) || 0 
+    });
     console.log(`Produto adicionado: ${produto.nome} x${quantidade}`);
   }
 
   atualizarCarrinho();
 }
 
+// Atualiza visualmente o carrinho
 function atualizarCarrinho() {
   const lista = document.getElementById('lista-carrinho');
   if (!lista) {
@@ -143,8 +156,7 @@ if (leitor) {
 
       const produto = produtosDisponiveis.find(p => String(p.codigo_barras) === codigo);
       if (produto) {
-        console.log('Produto encontrado por código de barras:', produto);
-        adicionarAoCarrinhoPorId(produto.id, 1);
+        adicionarAoCarrinhoPorId(produto.id, 1); // sempre 1 unidade ao bipar
       } else {
         alert("Produto não encontrado para o código: " + codigo);
         console.warn('Código não encontrado:', codigo);
@@ -156,4 +168,35 @@ if (leitor) {
   document.addEventListener("click", () => leitor.focus());
 } else {
   console.error('Input #leitor-codigo não encontrado!');
+}
+
+// Funções extras para os botões do carrinho (opcional)
+function cancelarVenda() {
+  if (confirm("Deseja cancelar a venda?")) {
+    carrinho = [];
+    atualizarCarrinho();
+  }
+}
+
+function abrirPopupPagamento() {
+  document.getElementById('popup-pagamento').style.display = 'block';
+}
+
+function verificarForma() {
+  const forma = document.getElementById('formaPagamento').value;
+  document.getElementById('dinheiro-section').style.display = forma === 'dinheiro' ? 'block' : 'none';
+}
+
+function calcularTroco() {
+  const total = carrinho.reduce((acc, item) => acc + item.preco_unitario_venda * item.quantidade, 0);
+  const recebido = parseFloat(document.getElementById('valorRecebido').value) || 0;
+  const troco = recebido - total;
+  document.getElementById('troco').textContent = troco >= 0 ? troco.toFixed(2) : '0.00';
+}
+
+function finalizarVenda() {
+  alert('Venda finalizada! (implemente o backend para processar)');
+  carrinho = [];
+  atualizarCarrinho();
+  document.getElementById('popup-pagamento').style.display = 'none';
 }

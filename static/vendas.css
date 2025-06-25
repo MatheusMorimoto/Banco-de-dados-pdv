@@ -61,7 +61,7 @@ nav ul li:hover .dropdown-menu {
   width: calc(100% - 240px);
   background-color: #fff;
   border-radius: 0 0 12px 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   z-index: 900;
   padding: 18px 32px 14px 32px;
   display: flex;
@@ -92,7 +92,8 @@ nav ul li:hover .dropdown-menu {
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: nowrap;
-  margin: 90px 40px 0 240px; /* espaço para menu e leitor */
+  margin: 90px 40px 0 240px;
+  /* espaço para menu e leitor */
   gap: 32px;
 }
 
@@ -115,7 +116,7 @@ nav ul li:hover .dropdown-menu {
 .produto-item {
   background: #f7f7f7;
   border-radius: 20px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.04);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.04);
   padding: 32px 24px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -163,9 +164,10 @@ input[type="number"].quantidade {
 
 /* Carrinho de vendas à direita, ocupando o máximo possível */
 .carrinho-venda {
-  flex: 1;
+  flex: 1 1 0;
   width: 100%;
-  min-width: 350px;
+  min-width: 0; /* Permite ocupar todo o espaço disponível */
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -174,17 +176,20 @@ input[type="number"].quantidade {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-height: 80vh;
   box-sizing: border-box;
-  align-self: flex-start;
+  align-self: stretch;
   margin-top: 0;
   position: sticky;
-  top: 90px; /* acompanha o leitor */
+  top: 90px;
   z-index: 1;
 }
 
 #lista-carrinho {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
+  overflow-x: hidden;
+  /* Evita scroll horizontal */
+  padding: 0 0 10px 0;
+  /* Remove padding lateral, mantém só embaixo */
   margin-bottom: 20px;
   border: 1px solid #ccc;
   font-family: monospace;
@@ -192,13 +197,16 @@ input[type="number"].quantidade {
   border-radius: 8px;
   max-height: 50vh;
   min-height: 120px;
+  box-sizing: border-box;
 }
 
 /* Deixa descrição e quantidade mais próximas e compactas */
-#lista-carrinho, #lista-carrinho pre, #lista-carrinho div {
-  letter-spacing: -0.5px;
+#lista-carrinho,
+#lista-carrinho pre,
+#lista-carrinho div {
+  letter-spacing: -2.1px;
   font-size: 13px;
-  line-height: 1;
+  line-height: 0.7; /* Mais compacto */
   padding: 0;
   margin: 0;
 }
@@ -215,7 +223,8 @@ input[type="number"].quantidade {
   margin-top: 10px;
 }
 
-.btn-cancelar, .btn-finalizar {
+.btn-cancelar,
+.btn-finalizar {
   flex: 1;
   padding: 12px 0;
   border: none;
@@ -250,7 +259,7 @@ input[type="number"].quantidade {
 .popup {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.08);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
   padding: 20px;
   margin-top: 20px;
 }
@@ -260,17 +269,39 @@ input[type="number"].quantidade {
   .vendas-container {
     flex-direction: column;
     margin-right: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin: 90px 40px 0 240px;
+    gap: 32px;
   }
+
   .carrinho-venda {
+    flex: 1 1 0;
     width: 100%;
-    max-width: 100vw;
-    position: static;
-    margin-top: 24px;
+    min-width: 0; /* Permite ocupar todo o espaço disponível */
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #e7e3e3;
+    border-radius: 32px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    box-sizing: border-box;
+    align-self: stretch;
+    margin-top: 0;
+    position: sticky;
+    top: 90px;
+    z-index: 1;
   }
+
   .produtos-disponiveis {
     grid-template-columns: 1fr;
     padding: 20px;
   }
+
   .leitor-container {
     left: 0;
     width: 100vw;

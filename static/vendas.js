@@ -111,25 +111,48 @@ function atualizarCarrinho() {
   lista.innerHTML = '';
   let totalGeral = 0;
 
+  // Cabeçalho alinhado estilo nota fiscal
   const cabecalho = document.createElement('pre');
-  cabecalho.textContent = `ITEM  CÓDIGO  DESCRIÇÃO               QTD  V.UNIT(R$)  V.TOTAL(R$)`;
+  cabecalho.textContent = `ITEM CÓDIGO      DESCRIÇÃO                QTD  V.UNIT(R$)  V.TOTAL(R$)`;
   cabecalho.style.fontFamily = 'monospace';
   cabecalho.style.marginBottom = '10px';
   lista.appendChild(cabecalho);
-
+  
   carrinho.forEach((item, index) => {
     const totalItem = item.preco_unitario_venda * item.quantidade;
     totalGeral += totalItem;
 
+    // Cria um container para a linha e o botão remover
+    const linhaContainer = document.createElement('div');
+    linhaContainer.style.display = 'flex';
+    linhaContainer.style.alignItems = 'center';
+    linhaContainer.style.marginBottom = '0'; // zera o espaçamento vertical
+    linhaContainer.style.padding = '0';      // zera o padding
+
     const linha = document.createElement('pre');
     linha.style.fontFamily = 'monospace';
-    linha.style.marginBottom = '4px';
-    linha.textContent = `${String(index + 1).padEnd(5)} ${String(item.codigo_barras).padEnd(8)} ${item.nome.padEnd(22)} ${String(item.quantidade).padStart(3)}  ${item.preco_unitario_venda.toFixed(2).padStart(10)}  ${totalItem.toFixed(2).padStart(11)}`;
-    lista.appendChild(linha);
+    linha.style.margin = 0;
+    linha.style.padding = 0;
+    linha.style.lineHeight = 0;
+    linha.textContent =
+      `${String(index + 1).padEnd(4)}${String(item.codigo_barras).padEnd(11)}${item.nome.padEnd(22)}${String(item.quantidade).padStart(5)}${item.preco_unitario_venda.toFixed(2).padStart(13)}${(totalItem).toFixed(2).padStart(14)}`;
+
+    // Botão remover
+    const btnRemover = document.createElement('button');
+    btnRemover.textContent = 'Remover';
+    btnRemover.style.marginLeft = '8px';
+    btnRemover.style.fontSize = '11px';
+    btnRemover.style.height = '16px';
+    btnRemover.style.padding = '0 4px';
+    btnRemover.onclick = function() { removerItem(index); };
+
+    linhaContainer.appendChild(linha);
+    linhaContainer.appendChild(btnRemover);
+    lista.appendChild(linhaContainer);
   });
 
   const separador = document.createElement('div');
-  separador.textContent = '----------------------------------------------';
+  separador.textContent = '---------------------------------------------------------------';
   separador.style.fontFamily = 'monospace';
   separador.style.margin = '10px 0';
   lista.appendChild(separador);
@@ -141,6 +164,12 @@ function atualizarCarrinho() {
   lista.appendChild(total);
 
   console.log('Carrinho atualizado:', carrinho);
+}
+
+// Função para remover item específico do carrinho
+function removerItem(index) {
+  carrinho.splice(index, 1);
+  atualizarCarrinho();
 }
 
 // Leitor de código de barras via input visível

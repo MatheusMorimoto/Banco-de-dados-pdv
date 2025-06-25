@@ -13,11 +13,9 @@
       <li class="dropdown">
         <a href="{{ url_for('vendas') }}">Vendas</a>                
       </li>
-
       <li class="dropdown">
         <a href="{{ url_for('cadastro') }}">Cadastro de produtos</a>
       </li>
-      
       <li class="dropdown">
         <a href="#">Relatório</a>
         <ul class="dropdown-menu">
@@ -28,27 +26,27 @@
     </ul>
   </nav>
 
+  <!-- Campo visível para leitura de código de barras -->
+  <div class="leitor-container">
+    <label for="leitor-codigo">Leitor de código de barras:</label>
+    <input type="text" id="leitor-codigo" placeholder="Bipe ou digite o código..." autofocus />
+  </div>
+
   <div class="vendas-container">
     <!-- Produtos disponíveis -->
     <div class="produtos-disponiveis">
-      <!-- Produtos carregados via JavaScript com os botões:
-           <button class="btn-adicionar" data-id="...">Adicionar</button>
-           serão inseridos aqui -->
+      <!-- Produtos carregados via JavaScript serão inseridos aqui -->
     </div>
 
     <!-- Carrinho de venda -->
     <div class="carrinho-venda">
-
-      <!-- Lista com rolagem interna -->
       <div id="lista-carrinho"></div>
 
-      <!-- Botões fixos abaixo da lista -->
       <div class="acoes-carrinho">
         <button class="btn-cancelar" onclick="cancelarVenda()">Cancelar Venda</button>
         <button class="btn-finalizar" onclick="abrirPopupPagamento()">Finalizar Venda</button>
       </div>
 
-      <!-- Popup de pagamento -->
       <div id="popup-pagamento" class="popup" style="display:none;">
         <h3>Forma de pagamento</h3>
         <select id="formaPagamento" onchange="verificarForma()">

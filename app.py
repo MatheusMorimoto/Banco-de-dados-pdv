@@ -246,8 +246,18 @@ def finalizar_venda():
             item['produto_id'],
             item['nome'],
             float(item['preco_unitario']),
-            int(item['quantidade']),
+                        int(item['quantidade']),
             float(item['subtotal'])
+        ))
+
+        # Atualiza o estoque do produto vendido
+        cursor.execute("""
+            UPDATE produtos
+            SET total_unidades = total_unidades - %s
+            WHERE id = %s
+        """, (
+            item['quantidade'],
+            item['produto_id']
         ))
 
     mysql.connection.commit()

@@ -25,15 +25,16 @@ fetch('/api/produtos')
         div.innerHTML = `
           <h3>${produto.nome}</h3>
           <p>R$ ${preco.toFixed(2)}</p>
+          <p>Disponível: ${produto.quantidade}</p>
           <label>Quantidade:</label>
-          <input type="number" min="1" value="1" id="quantidade-${produto.id}">
+          <input type="number" min="1" value="1" id="quantidade-${produto.id}" class="quantidade">
           <button class="btn-adicionar" data-id="${produto.id}">Adicionar</button>
         `;
         container.appendChild(div);
       });
     }
 
-    renderizarProdutos(pagina); // Carrega a 1ª página
+    renderizarProdutos(pagina);
     pagina++;
 
     container.addEventListener('click', function (e) {
@@ -56,3 +57,41 @@ fetch('/api/produtos')
     console.error('Erro ao carregar produtos:', err);
     alert('Não foi possível carregar os produtos do banco.');
   });
+
+function adicionarAoCarrinhoPorId(id) {
+  const input = document.getElementById(`quantidade-${id}`);
+  const quantidadeSelecionada = parseInt(input.value) || 1;
+  const produto = produtosDisponiveis.find(p => p.id === id);
+  if (!produto) return;
+
+  // Mesmo nome pode aparecer mais de uma vez (como notas fiscais)
+  carrinho.push({
+    ...produto,
+    quantidade: quantidadeSelecionada
+  });
+
+  atualizarCarrinho();
+}
+
+function atualizarCarrinho() {
+  const lista = document.getElementById('lista-carrinho');
+  lista.innerHTML = '';
+
+  let totalGeral = 0;
+
+  carrinho.forEach((item, index) => {
+    const totalItem = item.preco * item.quantidade;
+    totalGeral += totalItem;
+
+    const linha = document.createElement('div');
+    linha.style.marginBottom = '6px';
+    linha.textContent = `${index + 1}. ${item.quantidade}x ${item.nome} — ${item.descricao || 'Sem descrição'} — R$ ${totalItem.toFixed(2)}`;
+    lista.appendChild(linha);
+  });
+
+  const total = document.createElement('div');
+  total.style.marginTop = '15px';
+  total.style.fontWeight = 'bold';
+  total.textContent = `TOTAL: R$ ${totalGeral.toFixed(2)}`;
+  lista.appendChild(total);
+}

@@ -89,3 +89,13 @@ com isso vai ser criado o requirements.txt.
 11) integrar o flask com o MySQL
 
 pip install flask-mysqldb - para instalar no ambiente virtual
+
+12) salvar os codigos no githab
+
+git status - verificar o que foi atualizado 
+
+git add . - adicionar os arquivos modificados
+
+git commit -m "Atualizações recentes no projeto" - Faça o commit das alterações
+
+git push origin main - Envie para o repositório remoto:

@@ -126,8 +126,8 @@ function atualizarCarrinho() {
     const linhaContainer = document.createElement('div');
     linhaContainer.style.display = 'flex';
     linhaContainer.style.alignItems = 'center';
-    linhaContainer.style.marginBottom = '0'; // zera o espaçamento vertical
-    linhaContainer.style.padding = '0';      // zera o padding
+    linhaContainer.style.marginBottom = '6px'; // espaçamento entre linhas
+    linhaContainer.style.padding = '0';
 
     const linha = document.createElement('pre');
     linha.style.fontFamily = 'monospace';
@@ -174,29 +174,73 @@ function removerItem(index) {
 
 // Leitor de código de barras via input visível
 const leitor = document.getElementById("leitor-codigo");
+const btnLeitorEnter = document.getElementById("btn-leitor-enter");
 
 if (leitor) {
+  let tempoUltimaTecla = 0;
+  let bufferCodigo = "";
+
   leitor.addEventListener("keydown", function (e) {
+    const agora = Date.now();
+
+    // Se o tempo entre teclas for muito curto, provavelmente é um leitor de código de barras
+    if (agora - tempoUltimaTecla < 30) {
+      bufferCodigo += e.key;
+    } else {
+      bufferCodigo = e.key;
+    }
+    tempoUltimaTecla = agora;
+
+    // Se buffer ficou grande rapidamente, considera bipado e adiciona automaticamente
+    if (bufferCodigo.length >= 8 && (agora - tempoUltimaTecla < 30)) {
+      setTimeout(() => {
+        adicionarProdutoPorLeitor();
+        bufferCodigo = "";
+      }, 10);
+    }
+    // Se pressionou Enter, só adiciona se foi digitado manualmente (buffer pequeno)
     if (e.key === "Enter") {
-      const codigo = leitor.value.trim();
-      leitor.value = "";
-
-      console.log('Código lido:', codigo);
-
-      const produto = produtosDisponiveis.find(p => String(p.codigo_barras) === codigo);
-      if (produto) {
-        adicionarAoCarrinhoPorId(produto.id, 1); // sempre 1 unidade ao bipar
-      } else {
-        alert("Produto não encontrado para o código: " + codigo);
-        console.warn('Código não encontrado:', codigo);
+      if (bufferCodigo.length < 8) { // ajuste conforme o tamanho dos seus códigos
+        adicionarProdutoPorLeitor();
       }
+      bufferCodigo = "";
+      e.preventDefault();
     }
   });
 
-  // Foco automático no leitor após clique
-  document.addEventListener("click", () => leitor.focus());
+  if (btnLeitorEnter) {
+    btnLeitorEnter.addEventListener("click", function () {
+      adicionarProdutoPorLeitor();
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    const popup = document.getElementById('popup-pagamento');
+    if (popup && popup.style.display === 'block') {
+      // Não foca no leitor se o popup está aberto
+      return;
+    }
+    if (leitor) leitor.focus();
+  });
 } else {
   console.error('Input #leitor-codigo não encontrado!');
+}
+
+function adicionarProdutoPorLeitor() {
+  const codigo = leitor.value.trim();
+  leitor.value = "";
+
+  if (!codigo) return;
+
+  console.log('Código lido:', codigo);
+
+  const produto = produtosDisponiveis.find(p => String(p.codigo_barras) === codigo);
+  if (produto) {
+    adicionarAoCarrinhoPorId(produto.id, 1);
+  } else {
+    alert("Produto não encontrado para o código: " + codigo);
+    console.warn('Código não encontrado:', codigo);
+  }
 }
 
 // Funções extras para os botões do carrinho (opcional)

@@ -84,6 +84,14 @@ nav ul li:hover .dropdown-menu {
   border-radius: 8px;
   box-sizing: border-box;
   margin-left: 12px;
+  height: 48px; /* altura igual ao botão */
+}
+
+#btn-leitor-enter {
+  height: 48px; /* igual ao input */
+  font-size: 1.2rem;
+  padding: 0 24px;
+  border-radius: 8px;
 }
 
 /* Layout principal: produtos à esquerda, carrinho à direita */
@@ -156,6 +164,7 @@ input[type="number"].quantidade {
   cursor: pointer;
   margin-top: 10px;
   transition: background 0.2s;
+  height: 48px; /* igual ao leitor de código */
 }
 
 .produto-item button:hover {
@@ -262,6 +271,35 @@ input[type="number"].quantidade {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
   padding: 20px;
   margin-top: 20px;
+  max-width: 420px;
+}
+
+/* Espaçamento entre linhas no popup de pagamento */
+#popup-pagamento h3 {
+  margin-bottom: 18px;
+}
+
+#popup-pagamento select,
+#popup-pagamento label,
+#popup-pagamento input,
+#popup-pagamento .linha-pagamento,
+#popup-pagamento button {
+  display: block;
+  margin-bottom: 14px;
+}
+
+#popup-pagamento .linha-pagamento {
+  margin-bottom: 14px;
+}
+
+#popup-pagamento select {
+  min-width: 180px;
+}
+
+#popup-pagamento input[type="text"],
+#popup-pagamento input[type="number"] {
+  min-width: 160px;
+  margin-left: 8px;
 }
 
 /* Responsividade básica */

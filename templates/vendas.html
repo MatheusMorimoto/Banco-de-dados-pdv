@@ -27,10 +27,11 @@
   </nav>
 
   <!-- Campo visível para leitura de código de barras -->
-  <div class="leitor-container">
-    <label for="leitor-codigo">Leitor de código de barras:</label>
-    <input type="text" id="leitor-codigo" placeholder="Bipe ou digite o código..." autofocus />
-  </div>
+<div class="leitor-container">
+  <label for="leitor-codigo">Leitor de código de barras:</label>
+  <input type="text" id="leitor-codigo" placeholder="Bipe ou digite o código..." autofocus />
+  <button id="btn-leitor-enter" type="button">Adicionar</button>
+</div>
 
   <div class="vendas-container">
     <!-- Produtos disponíveis -->
@@ -55,10 +56,6 @@
           <option value="pix">Pix</option>
           <option value="dinheiro">Dinheiro</option>
         </select>
-
-        <div id="bandeiras" style="margin-top:10px;">
-          <p>Bandeiras aceitas: Visa, Mastercard, Elo, Amex, Hipercard</p>
-        </div>
 
         <div id="dinheiro-section" style="display:none;">
           <label>Valor recebido:</label>

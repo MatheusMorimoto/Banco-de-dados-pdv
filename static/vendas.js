@@ -273,3 +273,45 @@ function finalizarVenda() {
   atualizarCarrinho();
   document.getElementById('popup-pagamento').style.display = 'none';
 }
+
+// ...existing code...
+
+let html5QrCode = null;
+
+document.getElementById('btn-camera').addEventListener('click', function() {
+  const cameraDiv = document.getElementById('camera-leitor');
+  cameraDiv.style.display = 'block';
+
+  if (!html5QrCode) {
+    html5QrCode = new Html5Qrcode("camera-leitor");
+  }
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText, decodedResult) => {
+      document.getElementById('leitor-codigo').value = decodedText;
+      // Chame sua função para adicionar ao carrinho, se desejar:
+      // adicionarProdutoPorLeitor();
+      html5QrCode.stop();
+      cameraDiv.style.display = 'none';
+    },
+    (errorMessage) => {
+      // Pode ignorar erros de leitura
+    }
+  ).catch(err => {
+    alert("Erro ao acessar a câmera: " + err);
+    cameraDiv.style.display = 'none';
+  });
+});
+
+// Opcional: fechar a câmera ao clicar fora
+document.addEventListener('click', function(event) {
+  const cameraDiv = document.getElementById('camera-leitor');
+  if (cameraDiv.style.display === 'block' && !cameraDiv.contains(event.target) && event.target.id !== 'btn-camera') {
+    if (html5QrCode) {
+      html5QrCode.stop();
+    }
+    cameraDiv.style.display = 'none';
+  }
+});

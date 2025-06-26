@@ -213,11 +213,12 @@ input[type="number"].quantidade {
 #lista-carrinho,
 #lista-carrinho pre,
 #lista-carrinho div {
-  letter-spacing: -2.1px;
-  font-size: 13px;
-  line-height: 0.7; /* Mais compacto */
-  padding: 0;
+  letter-spacing: -1.0px;
+  font-size: -16px;
+  line-height: -1.0; /* Mais compacto */
+  padding: 6px 0;
   margin: 0;
+  font-family: 'arial', monospace;  
 }
 
 #lista-carrinho pre {
@@ -346,4 +347,23 @@ input[type="number"].quantidade {
     margin-left: 0;
     border-radius: 0;
   }
+}
+
+.btn-leitor {
+  height: 48px;
+  font-size: 1.2rem;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: 1.5px solid #bbb;
+  background: #f4f4f4;
+  color: #222;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.2s, border 0.2s;
+}
+
+.btn-leitor:hover {
+  background: #e9ece9;
+  border: 1.5px solid gold;
 }

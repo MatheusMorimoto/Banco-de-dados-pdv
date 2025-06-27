@@ -27,13 +27,13 @@
   </nav>
 
   <!-- Campo visível para leitura de código de barras -->
-<div class="leitor-container">
-  <label for="leitor-codigo">Leitor de código de barras:</label>
-  <input type="text" id="leitor-codigo" placeholder="Bipe ou digite o código..." autofocus />
-<button id="btn-leitor-enter" type="button" class="btn-leitor">Adicionar</button>
-<button id="btn-camera" type="button" class="btn-leitor">Ler com câmera</button>
-</div>
-<div id="camera-leitor" style="display:none; margin-top:10px;"></div>
+  <div class="leitor-container">
+    <label for="leitor-codigo">Leitor de código de barras:</label>
+    <input type="text" id="leitor-codigo" placeholder="Bipe ou digite o código..." autofocus />
+    <button id="btn-leitor-enter" type="button" class="btn-leitor">Adicionar</button>
+    <button id="btn-camera">Ler com câmera</button>
+    <div id="camera-leitor" style="display:none; margin-top:10px;"></div>
+  </div>
 
   <div class="vendas-container">
     <!-- Produtos disponíveis -->
@@ -71,7 +71,6 @@
   </div>
 
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-
   <script src="{{ url_for('static', filename='vendas.js') }}"></script>
 </body>
 </html>

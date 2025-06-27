@@ -35,7 +35,17 @@
       <input type="date" id="editNfDate" required>
 
       <label for="barcode">Código de barras:</label>
-      <input type="number" id="barcode" required>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="number" id="barcode" required>
+        <button id="btn-camera" type="button" title="Ler código com câmera" style="background: none; border: none; cursor: pointer; padding: 0;">
+          <!-- Ícone SVG de câmera -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-camera">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h4l2 3h3a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </button>
+        <div id="camera-leitor" style="display:none; margin-left:10px;"></div>
+      </div>
 
       <label for="packagePrice">Preço do fardo (R$):</label>
       <input type="number" id="packagePrice" required>
@@ -154,7 +164,7 @@
       </div>
     </div>
   </div>
-
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <script src="{{ url_for('static', filename='cadastro.js') }}"></script>
 </body>
 </html>

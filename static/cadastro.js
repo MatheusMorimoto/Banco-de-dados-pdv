@@ -56,6 +56,85 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Erro ao buscar produto:", erro);
     }
   });
+
+  // --- LEITOR DE CÓDIGO DE BARRAS COM CÂMERA ---
+  let html5QrCode = null;
+  let cameraAtiva = false;
+
+  document.getElementById('btn-camera').addEventListener('click', function () {
+    const cameraDiv = document.getElementById('camera-leitor');
+    cameraDiv.style.display = 'block';
+
+    // Solicita permissão antes de iniciar o leitor
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        if (!html5QrCode) {
+          html5QrCode = new Html5Qrcode("camera-leitor");
+        }
+
+        if (!cameraAtiva) {
+          cameraAtiva = true;
+          Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+              html5QrCode.start(
+                devices[0].id, // Usa a primeira câmera disponível
+                { fps: 10, qrbox: 250 },
+                (decodedText, decodedResult) => {
+                  document.getElementById('barcode').value = decodedText;
+                  html5QrCode.stop().then(() => {
+                    cameraDiv.style.display = 'none';
+                    cameraAtiva = false;
+                  });
+                },
+                (errorMessage) => {
+                  // Pode ignorar erros de leitura
+                }
+              ).catch(err => {
+                alert("Erro ao acessar a câmera: " + err);
+                cameraDiv.style.display = 'none';
+                cameraAtiva = false;
+              });
+            } else {
+              alert("Nenhuma câmera encontrada.");
+              cameraDiv.style.display = 'none';
+              cameraAtiva = false;
+            }
+          }).catch(err => {
+            alert("Erro ao listar câmeras: " + err);
+            cameraDiv.style.display = 'none';
+            cameraAtiva = false;
+          });
+        }
+        // Libera a câmera do getUserMedia
+        stream.getTracks().forEach(track => track.stop());
+      })
+      .catch(function(err) {
+        alert("Permissão da câmera negada ou não disponível.");
+        cameraDiv.style.display = 'none';
+        cameraAtiva = false;
+      });
+  });
+
+  // Fechar a câmera ao clicar fora do quadro
+  document.addEventListener('click', function (event) {
+    const cameraDiv = document.getElementById('camera-leitor');
+    if (
+      cameraDiv &&
+      cameraDiv.style.display === 'block' &&
+      !cameraDiv.contains(event.target) &&
+      event.target.id !== 'btn-camera'
+    ) {
+      if (html5QrCode && cameraAtiva) {
+        html5QrCode.stop().then(() => {
+          cameraDiv.style.display = 'none';
+          cameraAtiva = false;
+        });
+      } else {
+        cameraDiv.style.display = 'none';
+        cameraAtiva = false;
+      }
+    }
+  });
 });
 
 // Funções globais acessíveis via HTML onclick

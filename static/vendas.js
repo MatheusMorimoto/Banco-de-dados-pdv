@@ -285,42 +285,60 @@ function finalizarVenda() {
   document.getElementById('popup-pagamento').style.display = 'none';
 }
 
+// --- ATUALIZAÇÃO DO LEITOR DE CÂMERA ---
 let html5QrCode = null;
+let cameraAtiva = false;
 
 document.getElementById('btn-camera').addEventListener('click', function () {
+  alert('Para usar o leitor de código de barras, permita o acesso à câmera quando o navegador solicitar.');
   const cameraDiv = document.getElementById('camera-leitor');
   cameraDiv.style.display = 'block';
 
+  // Garante que só instancia uma vez
   if (!html5QrCode) {
     html5QrCode = new Html5Qrcode("camera-leitor");
   }
 
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText, decodedResult) => {
-      document.getElementById('leitor-codigo').value = decodedText;
-      // Chame sua função para adicionar ao carrinho, se desejar:
-      // adicionarProdutoPorLeitor();
-      html5QrCode.stop();
+  if (!cameraAtiva) {
+    cameraAtiva = true;
+    html5QrCode.start(
+      { facingMode: "user" }, // Aqui tenta usar a câmera do notebook
+      { fps: 10, qrbox: 250 },
+      (decodedText, decodedResult) => {
+        document.getElementById('leitor-codigo').value = decodedText;
+        // adicionarProdutoPorLeitor();
+        html5QrCode.stop().then(() => {
+          cameraDiv.style.display = 'none';
+          cameraAtiva = false;
+        });
+      },
+      (errorMessage) => {
+        // Pode ignorar erros de leitura
+      }
+    ).catch(err => {
+      alert("Erro ao acessar a câmera: " + err);
       cameraDiv.style.display = 'none';
-    },
-    (errorMessage) => {
-      // Pode ignorar erros de leitura
-    }
-  ).catch(err => {
-    alert("Erro ao acessar a câmera: " + err);
-    cameraDiv.style.display = 'none';
-  });
+      cameraAtiva = false;
+    });
+  }
 });
 
-// Opcional: fechar a câmera ao clicar fora
+// Fechar a câmera ao clicar fora
 document.addEventListener('click', function (event) {
   const cameraDiv = document.getElementById('camera-leitor');
-  if (cameraDiv.style.display === 'block' && !cameraDiv.contains(event.target) && event.target.id !== 'btn-camera') {
-    if (html5QrCode) {
-      html5QrCode.stop();
+  if (
+    cameraDiv.style.display === 'block' &&
+    !cameraDiv.contains(event.target) &&
+    event.target.id !== 'btn-camera'
+  ) {
+    if (html5QrCode && cameraAtiva) {
+      html5QrCode.stop().then(() => {
+        cameraDiv.style.display = 'none';
+        cameraAtiva = false;
+      });
+    } else {
+      cameraDiv.style.display = 'none';
+      cameraAtiva = false;
     }
-    cameraDiv.style.display = 'none';
   }
 });

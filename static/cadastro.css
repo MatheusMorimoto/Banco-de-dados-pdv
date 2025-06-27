@@ -212,3 +212,21 @@ nav ul {
     padding: 15px;
   }
 }
+
+#btn-camera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#btn-camera svg {
+  width: 24px;
+  height: 24px;
+  color: #222;
+}

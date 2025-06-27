@@ -89,10 +89,10 @@ function adicionarAoCarrinhoPorId(id, quantidade = null) {
     existente.quantidade += quantidade;
     console.log(`Quantidade atualizada: ${existente.nome} = ${existente.quantidade}`);
   } else {
-    carrinho.push({ 
-      ...produto, 
-      quantidade, 
-      preco_unitario_venda: parseFloat(produto.preco_unitario_venda) || 0 
+    carrinho.push({
+      ...produto,
+      quantidade,
+      preco_unitario_venda: parseFloat(produto.preco_unitario_venda) || 0
     });
     console.log(`Produto adicionado: ${produto.nome} x${quantidade}`);
   }
@@ -111,13 +111,19 @@ function atualizarCarrinho() {
   lista.innerHTML = '';
   let totalGeral = 0;
 
-  // Cabeçalho alinhado estilo nota fiscal
+  // Cabeçalho alinhado com padEnd/padStart
   const cabecalho = document.createElement('pre');
-  cabecalho.textContent = `ITEM CÓDIGO      DESCRIÇÃO                QTD  V.UNIT(R$)  V.TOTAL(R$)`;
+  cabecalho.textContent =
+    'ITEM'.padEnd(5) +
+    'CÓDIGO'.padEnd(12) +
+    'DESCRIÇÃO'.padEnd(15) +
+    'QTD'.padEnd(6) +
+    'V.UNIT(R$)'.padEnd(12) +
+    'V.TOTAL(R$)';
   cabecalho.style.fontFamily = 'monospace';
   cabecalho.style.marginBottom = '10px';
   lista.appendChild(cabecalho);
-  
+
   carrinho.forEach((item, index) => {
     const totalItem = item.preco_unitario_venda * item.quantidade;
     totalGeral += totalItem;
@@ -126,7 +132,7 @@ function atualizarCarrinho() {
     const linhaContainer = document.createElement('div');
     linhaContainer.style.display = 'flex';
     linhaContainer.style.alignItems = 'center';
-    linhaContainer.style.marginBottom = '6px'; // espaçamento entre linhas
+    linhaContainer.style.marginBottom = '6px';
     linhaContainer.style.padding = '0';
 
     const linha = document.createElement('pre');
@@ -135,7 +141,12 @@ function atualizarCarrinho() {
     linha.style.padding = 0;
     linha.style.lineHeight = 0;
     linha.textContent =
-      `${String(index + 1).padEnd(4)}${String(item.codigo_barras).padEnd(11)}${item.nome.padEnd(22)}${String(item.quantidade).padStart(5)}${item.preco_unitario_venda.toFixed(2).padStart(13)}${(totalItem).toFixed(2).padStart(14)}`;
+      String(index + 1).padEnd(5) +
+      String(item.codigo_barras).padEnd(12) +
+      String(item.nome).padEnd(15) +
+      String(item.quantidade).padEnd(6) +
+      item.preco_unitario_venda.toFixed(2).padEnd(12) +
+      totalItem.toFixed(2);
 
     // Botão remover
     const btnRemover = document.createElement('button');
@@ -144,7 +155,7 @@ function atualizarCarrinho() {
     btnRemover.style.fontSize = '11px';
     btnRemover.style.height = '16px';
     btnRemover.style.padding = '0 4px';
-    btnRemover.onclick = function() { removerItem(index); };
+    btnRemover.onclick = function () { removerItem(index); };
 
     linhaContainer.appendChild(linha);
     linhaContainer.appendChild(btnRemover);
@@ -274,11 +285,9 @@ function finalizarVenda() {
   document.getElementById('popup-pagamento').style.display = 'none';
 }
 
-// ...existing code...
-
 let html5QrCode = null;
 
-document.getElementById('btn-camera').addEventListener('click', function() {
+document.getElementById('btn-camera').addEventListener('click', function () {
   const cameraDiv = document.getElementById('camera-leitor');
   cameraDiv.style.display = 'block';
 
@@ -306,7 +315,7 @@ document.getElementById('btn-camera').addEventListener('click', function() {
 });
 
 // Opcional: fechar a câmera ao clicar fora
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
   const cameraDiv = document.getElementById('camera-leitor');
   if (cameraDiv.style.display === 'block' && !cameraDiv.contains(event.target) && event.target.id !== 'btn-camera') {
     if (html5QrCode) {

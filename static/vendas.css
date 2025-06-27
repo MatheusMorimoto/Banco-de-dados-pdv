@@ -1,9 +1,10 @@
 /* Reset e corpo */
 body {
+  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
+  padding: 20px;
+  background-color: #f5f5f5;
+  padding-left: 240px;
 }
 
 /* Menu lateral fixo */
@@ -28,14 +29,13 @@ nav ul {
 
 nav ul li a {
   color: black;
+  background-color: transparent;
   padding: 10px 15px;
   display: block;
   border-radius: 12px;
   border: 2px solid gold;
-  background-color: transparent;
   transition: all 0.3s ease;
   text-decoration: none;
-  margin-bottom: 10px;
 }
 
 nav ul li a:hover {
@@ -53,132 +53,130 @@ nav ul li:hover .dropdown-menu {
   display: block;
 }
 
-/* Leitor de código de barras fixo no topo da área de vendas */
+/* Leitor de código de barras */
 .leitor-container {
   position: fixed;
   top: 0;
   left: 240px;
   width: calc(100% - 240px);
-  background-color: #fff;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  z-index: 900;
-  padding: 18px 32px 14px 32px;
+  background: #fff;
+  padding: 20px 30px;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
+  z-index: 900;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
 }
 
 .leitor-container label {
-  font-size: 1.1rem;
   font-weight: bold;
-  color: #444;
+  font-size: 1.1rem;
+  margin-right: 10px;
 }
 
 #leitor-codigo {
-  width: 100%;
-  max-width: 500px;
-  padding: 16px 18px;
+  flex: 1;
+  height: 48px;
   font-size: 1.2rem;
-  border: 2px solid #ccc;
+  padding: 0 16px;
   border-radius: 8px;
-  box-sizing: border-box;
-  margin-left: 12px;
-  height: 48px; /* altura igual ao botão */
+  border: 1.5px solid #bbb;
+  outline: none;
 }
 
-#btn-leitor-enter {
-  height: 48px; /* igual ao input */
+.btn-leitor {
+  height: 48px;
   font-size: 1.2rem;
   padding: 0 24px;
   border-radius: 8px;
+  border: 1.5px solid #bbb;
+  background: #f4f4f4;
+  color: #222;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background 0.2s, border 0.2s;
 }
 
-/* Layout principal: produtos à esquerda, carrinho à direita */
+.btn-leitor:hover {
+  background: #e9ece9;
+  border: 1.5px solid gold;
+}
+
+/* Container principal */
 .vendas-container {
   display: flex;
+  gap: 40px;
+  margin-top: 90px;
   align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  margin: 90px 40px 0 240px;
-  /* espaço para menu e leitor */
-  gap: 32px;
 }
 
 /* Produtos disponíveis */
 .produtos-disponiveis {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 32px;
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 80vh;
+  gap: 24px;
   flex: 2;
-  min-width: 350px;
+  padding: 20px;
+  min-width: 320px;
+  height: 70vh;
+  overflow-y: auto;
 }
 
-/* Produto individual */
 .produto-item {
-  background: #f7f7f7;
-  border-radius: 20px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.04);
-  padding: 32px 24px 24px 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  padding: 24px 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 220px;
+  min-width: 180px;
 }
 
 .produto-item h3 {
   margin: 0 0 8px 0;
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 .produto-item p {
-  margin: 4px 0;
-  font-size: 16px;
+  margin: 2px 0;
+  font-size: 1rem;
 }
 
-input[type="number"].quantidade {
+.produto-item label {
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+.produto-item input[type="number"] {
   width: 60px;
-  padding: 6px 8px;
-  font-size: 16px;
-  border: 1.5px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 10px;
+  margin: 6px 0 0 0;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
 }
 
-.produto-item button {
-  width: 100%;
-  padding: 14px 0;
+.produto-item .btn-adicionar {
+  margin-top: 10px;
   background: gold;
   color: #222;
   border: none;
-  border-radius: 20px;
-  font-size: 18px;
+  border-radius: 6px;
+  padding: 8px 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
   transition: background 0.2s;
-  height: 48px; /* igual ao leitor de código */
 }
 
-.produto-item button:hover {
+.produto-item .btn-adicionar:hover {
   background: #ffe066;
 }
 
-/* Carrinho de vendas à direita, ocupando o máximo possível */
+/* Carrinho de venda */
 .carrinho-venda {
-  flex: 1 1 0;
-  width: 100%;
-  min-width: 0; /* Permite ocupar todo o espaço disponível */
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
   padding: 20px;
   background-color: #e7e3e3;
   border-radius: 32px;
@@ -190,15 +188,14 @@ input[type="number"].quantidade {
   position: sticky;
   top: 90px;
   z-index: 1;
+  width: 100%;
+  min-width: 0;
 }
 
 #lista-carrinho {
-  flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
-  /* Evita scroll horizontal */
+  overflow-x: auto;
   padding: 0 0 10px 0;
-  /* Remove padding lateral, mantém só embaixo */
   margin-bottom: 20px;
   border: 1px solid #ccc;
   font-family: monospace;
@@ -207,17 +204,10 @@ input[type="number"].quantidade {
   max-height: 50vh;
   min-height: 120px;
   box-sizing: border-box;
+  font-size: 15px;
 }
 
-/* Deixa descrição e quantidade mais próximas e compactas */
-#lista-carrinho,
-#lista-carrinho pre,
 #lista-carrinho div {
-  letter-spacing: -1.0px;
-  font-size: -16px;
-  line-height: -1.0; /* Mais compacto */
-  padding: 6px 0;
-  margin: 0;
   font-family: 'arial', monospace;  
 }
 
@@ -254,93 +244,62 @@ input[type="number"].quantidade {
 .btn-finalizar {
   background: gold;
   color: #222;
-  margin-right: 0;
-}
-
-.btn-cancelar:hover {
-  background: #999;
-}
-
-.btn-finalizar:hover {
-  background: #ffe066;
 }
 
 /* Popup de pagamento */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
 .popup {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  background: white;
   padding: 20px;
-  margin-top: 20px;
-  max-width: 420px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Espaçamento entre linhas no popup de pagamento */
-#popup-pagamento h3 {
-  margin-bottom: 18px;
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#popup-pagamento select,
-#popup-pagamento label,
-#popup-pagamento input,
-#popup-pagamento .linha-pagamento,
-#popup-pagamento button {
-  display: block;
-  margin-bottom: 14px;
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
 }
 
-#popup-pagamento .linha-pagamento {
-  margin-bottom: 14px;
+/* Leitor por câmera */
+.leitor-container #camera-leitor {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 400px;
+  min-height: 200px;
+  background: #222;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-#popup-pagamento select {
-  min-width: 180px;
-}
-
-#popup-pagamento input[type="text"],
-#popup-pagamento input[type="number"] {
-  min-width: 160px;
-  margin-left: 8px;
-}
-
-/* Responsividade básica */
+/* Responsividade */
 @media (max-width: 1200px) {
-  .vendas-container {
-    flex-direction: column;
-    margin-right: 10px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    margin: 90px 40px 0 240px;
-    gap: 32px;
-  }
-
-  .carrinho-venda {
-    flex: 1 1 0;
-    width: 100%;
-    min-width: 0; /* Permite ocupar todo o espaço disponível */
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #e7e3e3;
-    border-radius: 32px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: 80vh;
-    box-sizing: border-box;
-    align-self: stretch;
-    margin-top: 0;
-    position: sticky;
-    top: 90px;
-    z-index: 1;
-  }
-
   .produtos-disponiveis {
     grid-template-columns: 1fr;
     padding: 20px;
   }
-
   .leitor-container {
     left: 0;
     width: 100vw;
@@ -349,21 +308,94 @@ input[type="number"].quantidade {
   }
 }
 
-.btn-leitor {
-  height: 48px;
-  font-size: 1.2rem;
-  padding: 0 24px;
-  border-radius: 8px;
-  border: 1.5px solid #bbb;
-  background: #f4f4f4;
-  color: #222;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 10px;
-  transition: background 0.2s, border 0.2s;
+@media (max-width: 900px) {
+  body {
+    padding-left: 0;
+    padding: 10px;
+  }
+  nav {
+    position: static;
+    width: 100vw;
+    height: auto;
+    border-radius: 0;
+    padding: 10px 0;
+  }
+  .leitor-container {
+    position: static;
+    left: 0;
+    width: 100vw;
+    border-radius: 0;
+    padding: 10px 5vw;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .vendas-container {
+    flex-direction: column;
+    margin: 120px 0 0 0;
+    gap: 16px;
+  }
+  .produtos-disponiveis {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    min-width: unset;
+  }
+  .carrinho-venda {
+    padding: 10px 2vw;
+    border-radius: 16px;
+    max-height: none;
+    position: static;
+    top: auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+  }
+  #lista-carrinho {
+    font-size: 13px;
+    min-height: 80px;
+    max-height: 30vh;
+  }
 }
 
-.btn-leitor:hover {
-  background: #e9ece9;
-  border: 1.5px solid gold;
+@media (max-width: 600px) {
+  .popup {
+    width: 98vw !important;
+    padding: 8px;
+    font-size: 14px;
+  }
+  nav ul li a {
+    font-size: 14px;
+    padding: 8px 6px;
+  }
+  .leitor-container label {
+    font-size: 1rem;
+  }
+  #leitor-codigo, .btn-leitor {
+    font-size: 1rem;
+    height: 38px;
+    padding: 0 10px;
+  }
+  th, td {
+    font-size: 13px;
+    padding: 4px;
+  }
+  .produto-item {
+    padding: 16px 8px;
+    min-width: unset;
+  }
+  #lista-carrinho {
+    font-size: 12px;
+    padding: 4px 0;
+    min-height: 60px;
+    max-height: 25vh;
+  }
+  .acoes-carrinho {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-cancelar,
+  .btn-finalizar {
+    font-size: 15px;
+    padding: 10px 0;
+    margin-right: 0;
+  }
 }

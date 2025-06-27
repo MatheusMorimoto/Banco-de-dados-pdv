@@ -99,3 +99,9 @@ git add . - adicionar os arquivos modificados
 git commit -m "Atualizações recentes no projeto" - Faça o commit das alterações
 
 git push origin main - Envie para o repositório remoto:
+
+
+13) redenrizar o ambiente flask
+
+auto-py-to-exe - sso abrirá a interface gráfica do programa.
+depois indica na onde esta o app.py

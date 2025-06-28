@@ -21,6 +21,15 @@ form, .table-section {
   min-width: 300px;
 }
 
+.table-section {
+  min-width: 300px;
+}
+
+.table-scroll {
+  max-height: 320px;   /* ajuste conforme o layout desejado */
+  overflow-y: auto;
+}
+
 h2 {
   margin-top: 0;
 }
@@ -140,8 +149,8 @@ nav ul {
   border-radius: 8px;
   width: 500px;
   max-width: 95%;
-  max-height: 90vh; /* ✅ limita a altura máxima à tela visível */
-  overflow-y: auto;  /* ✅ ativa scroll interno caso o conteúdo ultrapasse */
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 .popup-header {
@@ -213,6 +222,45 @@ nav ul {
   }
 }
 
+/* Agrupamento input + botão câmera para alinhamento igual aos outros campos */
+.input-camera-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-camera-group input[type="text"],
+.input-camera-group input[type="number"] {
+  flex: 1;
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Botão da câmera para nota fiscal */
+#btn-camera-nf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 5px;
+}
+
+#btn-camera-nf svg {
+  width: 24px;
+  height: 24px;
+  color: #222;
+}
+
+/* Botão da câmera para código de barras (mantém igual) */
 #btn-camera {
   display: flex;
   align-items: center;
@@ -223,6 +271,7 @@ nav ul {
   border: none;
   cursor: pointer;
   padding: 0;
+  margin-top: 5px;
 }
 
 #btn-camera svg {

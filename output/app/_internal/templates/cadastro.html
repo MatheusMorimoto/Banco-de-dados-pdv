@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Produtos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cadastro.css') }}">
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li class="dropdown"><a href="{{ url_for('vendas') }}">Vendas</a></li>
+      <li class="dropdown"><a href="{{ url_for('cadastro') }}">Cadastro de produtos</a></li>
+      <li class="dropdown">
+        <a href="#">Relatório</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Vendas</a></li>
+          <li><a href="#">Cálculo do estoque</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <form id="productForm">
+      <h2>Cadastro de Produtos</h2>
+
+      <label for="name">Nome:</label>
+      <input type="text" id="name" required>
+
+      <label for="editNfNumber">Número da Nota Fiscal:</label>
+      <input type="text" id="editNfNumber" required>
+      <label for="editNfDate">Data da Nota Fiscal:</label>
+      <input type="date" id="editNfDate" required>
+
+      <label for="barcode">Código de barras:</label>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="number" id="barcode" required>
+        <button id="btn-camera" type="button" title="Ler código com câmera" style="background: none; border: none; cursor: pointer; padding: 0;">
+          <!-- Ícone SVG de câmera -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-camera">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h4l2 3h3a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </button>
+        <div id="camera-leitor" style="display:none; margin-left:10px;"></div>
+      </div>
+
+      <label for="packagePrice">Preço do fardo (R$):</label>
+      <input type="number" id="packagePrice" required>
+
+      <label for="packageQty">Quantidade de Fardos:</label>
+      <input type="number" id="packageQty" required>
+
+      <label for="unitsPerPackage">Unidades por Fardo:</label>
+      <input type="number" id="unitsPerPackage" required>
+
+      <label for="totalUnits">Total de Unidades:</label>
+      <input type="number" id="totalUnits" required>
+
+      <label for="totalCost">Custo Total do Fardo (R$):</label>
+      <input type="number" id="totalCost" readonly>
+
+      <label for="unitCost">Custo por Unidade:</label>
+      <input type="number" id="unitCost" readonly>
+
+      <label for="margin">Margem de Lucro (%): <span id="marginValue">30%</span></label>
+      <input type="range" id="margin" min="0" max="100" value="30">
+
+      <label for="finalPackagePrice">Preço final do fardo (R$):</label>
+      <input type="number" id="finalPackagePrice" readonly>
+
+      <label for="finalUnitPrice">Preço de venda da Unidade (R$):</label>
+      <input type="number" id="finalUnitPrice" readonly>
+
+      <div class="botoes-2x2">
+        <button type="button" onclick="registerProduct()">Cadastrar</button>
+        <button type="button" onclick="abrirEdicaoPopup()">Alterar Cadastro</button>
+        <button type="button" onclick="carregarRelatorio()">Ver Relatório</button>
+        <button type="button" onclick="excluircadastro()">Excluir Produto</button>
+      </div>
+    </form>
+
+    <div class="table-section">
+      <h2>Buscar produto</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Código de Barras</th>
+            <th>Nome</th>
+            <th>Quantidade de Fardos</th>
+            <th>Preço final do Fardo</th>
+            <th>Quantidade de Unidades</th>
+            <th>Preço de venda por Unidade</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pop-up de exclusão -->
+  <div id="deletePopup" class="popup-overlay" style="display: none;">
+    <div class="popup">
+      <h3>Excluir Produto</h3>
+      <label for="deleteId">ID:</label>
+      <input type="number" id="deleteId" placeholder="Opcional">
+      <label for="deleteBarcode">Código de Barras:</label>
+      <input type="number" id="deleteBarcode" placeholder="Opcional">
+      <div class="popup-buttons">
+        <button onclick="confirmarExclusao()">Confirmar Exclusão</button>
+        <button onclick="fecharPopup()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pop-up de edição em formato vertical -->
+  <div id="editPopup" class="popup-overlay" style="display: none;">
+    <div class="popup">
+      <h3>Alterar Produto</h3>
+      <label for="editId">ID:</label>
+      <input type="number" id="editId" placeholder="Opcional">      
+      <label for="editBarcode">Código de Barras:</label>
+      <input type="number" id="editBarcode" placeholder="Opcional">
+      <button onclick="buscarProdutoParaEdicao()">Buscar</button>
+
+      <div id="editForm" style="display: none; margin-top: 15px;">
+        <label for="editNome">Nome:</label>
+        <input type="text" id="editNome">
+
+        <label for="editPrecoFardo">Preço do fardo (R$):</label>
+        <input type="number" id="editPrecoFardo">
+
+        <label for="editQtdFardos">Quantidade de Fardos:</label>
+        <input type="number" id="editQtdFardos">
+
+        <label for="editUnitsPerPackage">Unidades por Fardo:</label>
+        <input type="number" id="editUnitsPerPackage">
+
+        <label for="editMargin">Margem de Lucro (%): <span id="editMarginValue">30%</span></label>
+        <input type="range" id="editMargin" min="0" max="100" value="30">
+
+        <label for="editTotalCost">Custo Total do Fardo (R$):</label>
+        <input type="number" id="editTotalCost" readonly>
+
+        <label for="editUnitCost">Custo por Unidade:</label>
+        <input type="number" id="editUnitCost" readonly>
+
+        <label for="editFinalPackagePrice">Preço final do fardo (R$):</label>
+        <input type="number" id="editFinalPackagePrice" readonly>
+
+        <label for="editPrecoUnit">Preço de venda da Unidade (R$):</label>
+        <input type="number" id="editPrecoUnit" readonly>
+
+        <label for="editTotalUnidades">Total de Unidades:</label>
+        <input type="number" id="editTotalUnidades" readonly>
+
+        <div class="popup-buttons" style="margin-top: 15px;">
+          <button onclick="salvarAlteracoesPopup()">Salvar Alterações</button>
+          <button onclick="fecharEdicaoPopup()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script src="{{ url_for('static', filename='cadastro.js') }}"></script>
+</body>
+</html>

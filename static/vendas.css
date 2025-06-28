@@ -190,6 +190,10 @@ nav ul li:hover .dropdown-menu {
   z-index: 1;
   width: 100%;
   min-width: 0;
+    display: flex;
+  flex-direction: column;
+  height: 70vh;
+  min-width: 320px;
 }
 
 #lista-carrinho {
@@ -205,6 +209,10 @@ nav ul li:hover .dropdown-menu {
   min-height: 120px;
   box-sizing: border-box;
   font-size: 15px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 50vh; /* ajuste conforme o layout */
+
 }
 
 #lista-carrinho div {

@@ -57,27 +57,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // --- LEITOR DE CÓDIGO DE BARRAS COM CÂMERA ---
+  // --- LEITOR DE CÓDIGO DE BARRAS COM CÂMERA COM CONFIRMAÇÃO ---
   let html5QrCode = null;
   let cameraAtiva = false;
 
+  // Cria popup de confirmação se não existir
+  if (!document.getElementById('popup-camera-confirm')) {
+    const popup = document.createElement('div');
+    popup.id = 'popup-camera-confirm';
+    popup.style.display = 'none';
+    popup.style.position = 'fixed';
+    popup.style.top = '0';
+    popup.style.left = '0';
+    popup.style.width = '100vw';
+    popup.style.height = '100vh';
+    popup.style.background = 'rgba(0,0,0,0.4)';
+    popup.style.alignItems = 'center';
+    popup.style.justifyContent = 'center';
+    popup.style.zIndex = '9999';
+    popup.innerHTML = `
+      <div style="background:#fff; padding:24px; border-radius:8px; text-align:center;">
+        <p>Deseja permitir o acesso à câmera para ler o código de barras?</p>
+        <button id="confirm-camera-yes">Sim</button>
+        <button id="confirm-camera-no">Não</button>
+      </div>
+    `;
+    document.body.appendChild(popup);
+  }
+
   document.getElementById('btn-camera').addEventListener('click', function () {
+    document.getElementById('popup-camera-confirm').style.display = 'flex';
+  });
+
+  document.getElementById('confirm-camera-yes').addEventListener('click', function () {
+    document.getElementById('popup-camera-confirm').style.display = 'none';
     const cameraDiv = document.getElementById('camera-leitor');
     cameraDiv.style.display = 'block';
 
-    // Solicita permissão antes de iniciar o leitor
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(function(stream) {
         if (!html5QrCode) {
           html5QrCode = new Html5Qrcode("camera-leitor");
         }
-
         if (!cameraAtiva) {
           cameraAtiva = true;
           Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
               html5QrCode.start(
-                devices[0].id, // Usa a primeira câmera disponível
+                devices[0].id,
                 { fps: 10, qrbox: 250 },
                 (decodedText, decodedResult) => {
                   document.getElementById('barcode').value = decodedText;
@@ -86,9 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     cameraAtiva = false;
                   });
                 },
-                (errorMessage) => {
-                  // Pode ignorar erros de leitura
-                }
+                (errorMessage) => {}
               ).catch(err => {
                 alert("Erro ao acessar a câmera: " + err);
                 cameraDiv.style.display = 'none';
@@ -105,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
             cameraAtiva = false;
           });
         }
-        // Libera a câmera do getUserMedia
         stream.getTracks().forEach(track => track.stop());
       })
       .catch(function(err) {
@@ -113,6 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
         cameraDiv.style.display = 'none';
         cameraAtiva = false;
       });
+  });
+
+  document.getElementById('confirm-camera-no').addEventListener('click', function () {
+    document.getElementById('popup-camera-confirm').style.display = 'none';
   });
 
   // Fechar a câmera ao clicar fora do quadro
@@ -132,6 +160,80 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         cameraDiv.style.display = 'none';
         cameraAtiva = false;
+      }
+    }
+  });
+
+  // --- LEITOR DE NOTA FISCAL COM CÂMERA ---
+  let html5QrCodeNf = null;
+  let cameraAtivaNf = false;
+
+  document.getElementById('btn-camera-nf').addEventListener('click', function () {
+    const cameraDivNf = document.getElementById('camera-leitor-nf');
+    cameraDivNf.style.display = 'block';
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(function(stream) {
+        if (!html5QrCodeNf) {
+          html5QrCodeNf = new Html5Qrcode("camera-leitor-nf");
+        }
+        if (!cameraAtivaNf) {
+          cameraAtivaNf = true;
+          Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+              html5QrCodeNf.start(
+                devices[0].id,
+                { fps: 10, qrbox: 250 },
+                (decodedText, decodedResult) => {
+                  document.getElementById('editNfNumber').value = decodedText;
+                  html5QrCodeNf.stop().then(() => {
+                    cameraDivNf.style.display = 'none';
+                    cameraAtivaNf = false;
+                  });
+                },
+                (errorMessage) => {}
+              ).catch(err => {
+                alert("Erro ao acessar a câmera: " + err);
+                cameraDivNf.style.display = 'none';
+                cameraAtivaNf = false;
+              });
+            } else {
+              alert("Nenhuma câmera encontrada.");
+              cameraDivNf.style.display = 'none';
+              cameraAtivaNf = false;
+            }
+          }).catch(err => {
+            alert("Erro ao listar câmeras: " + err);
+            cameraDivNf.style.display = 'none';
+            cameraAtivaNf = false;
+          });
+        }
+        stream.getTracks().forEach(track => track.stop());
+      })
+      .catch(function(err) {
+        alert("Permissão da câmera negada ou não disponível.");
+        cameraDivNf.style.display = 'none';
+        cameraAtivaNf = false;
+      });
+  });
+
+  // Fechar a câmera ao clicar fora do quadro da nota fiscal
+  document.addEventListener('click', function (event) {
+    const cameraDivNf = document.getElementById('camera-leitor-nf');
+    if (
+      cameraDivNf &&
+      cameraDivNf.style.display === 'block' &&
+      !cameraDivNf.contains(event.target) &&
+      event.target.id !== 'btn-camera-nf'
+    ) {
+      if (html5QrCodeNf && cameraAtivaNf) {
+        html5QrCodeNf.stop().then(() => {
+          cameraDivNf.style.display = 'none';
+          cameraAtivaNf = false;
+        });
+      } else {
+        cameraDivNf.style.display = 'none';
+        cameraAtivaNf = false;
       }
     }
   });

@@ -187,6 +187,18 @@ function removerItem(index) {
 const leitor = document.getElementById("leitor-codigo");
 const btnLeitorEnter = document.getElementById("btn-leitor-enter");
 
+// --- AJUSTE VISUAL DO INPUT DO LEITOR DE CÓDIGO DE BARRAS ---
+if (leitor) {
+  leitor.style.width = "320px";
+  leitor.style.maxWidth = "90vw";
+  leitor.style.height = "36px";
+  leitor.style.fontSize = "16px";
+  leitor.style.padding = "4px 10px";
+  leitor.style.borderRadius = "6px";
+  leitor.style.border = "1px solid #bbb";
+  leitor.style.background = "#fff";
+}
+
 if (leitor) {
   let tempoUltimaTecla = 0;
   let bufferCodigo = "";
@@ -288,21 +300,76 @@ function finalizarVenda() {
 // --- ATUALIZAÇÃO DO LEITOR DE CÂMERA ---
 let html5QrCode = null;
 let cameraAtiva = false;
+let camerasDisponiveis = [];
+let cameraAtualIndex = 0;
 
 document.getElementById('btn-camera').addEventListener('click', function () {
-  alert('Para usar o leitor de código de barras, permita o acesso à câmera quando o navegador solicitar.');
-  const cameraDiv = document.getElementById('camera-leitor');
-  cameraDiv.style.display = 'block';
-
-  // Garante que só instancia uma vez
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("camera-leitor");
+  // HTTPS não é obrigatório em localhost, mas é em IP/rede
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    alert('Para usar o leitor de código de barras, acesse o sistema via HTTPS.');
+    return;
   }
+  if (confirm('O sistema vai solicitar permissão para acessar a câmera do seu dispositivo. Deseja continuar?')) {
+    const cameraDiv = document.getElementById('camera-leitor');
+    cameraDiv.style.display = 'block';
 
+    // Adiciona o botão de trocar câmera se não existir
+    if (!document.getElementById('btn-trocar-camera')) {
+      const btnTrocar = document.createElement('button');
+      btnTrocar.id = 'btn-trocar-camera';
+      btnTrocar.title = 'Trocar câmera';
+      btnTrocar.style.position = 'absolute';
+      btnTrocar.style.top = '10px';
+      btnTrocar.style.right = '10px';
+      btnTrocar.style.zIndex = '10';
+      btnTrocar.style.fontSize = '22px';
+      btnTrocar.innerHTML = '🔄';
+      cameraDiv.appendChild(btnTrocar);
+
+      btnTrocar.addEventListener('click', function () {
+        if (camerasDisponiveis.length > 1 && html5QrCode && cameraAtiva) {
+          html5QrCode.stop().then(() => {
+            cameraAtiva = false;
+            cameraAtualIndex = (cameraAtualIndex + 1) % camerasDisponiveis.length;
+            iniciarCameraAtual();
+          });
+        } else {
+          alert('Não há outra câmera disponível para alternar.');
+        }
+      });
+    }
+
+    // Garante que só instancia uma vez
+    if (!html5QrCode) {
+      html5QrCode = new Html5Qrcode("camera-leitor");
+    }
+
+    // Tenta listar as câmeras disponíveis
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        camerasDisponiveis = cameras;
+        cameraAtualIndex = 0;
+        iniciarCameraAtual();
+      } else {
+        alert("Nenhuma câmera foi encontrada no dispositivo.");
+        cameraDiv.style.display = 'none';
+        cameraAtiva = false;
+      }
+    }).catch(err => {
+      alert("Erro ao listar câmeras: " + err);
+      cameraDiv.style.display = 'none';
+      cameraAtiva = false;
+    });
+  }
+});
+
+function iniciarCameraAtual() {
+  const cameraDiv = document.getElementById('camera-leitor');
+  const cameraId = camerasDisponiveis[cameraAtualIndex].id;
   if (!cameraAtiva) {
     cameraAtiva = true;
     html5QrCode.start(
-      { facingMode: "user" }, // Aqui tenta usar a câmera do notebook
+      { deviceId: { exact: cameraId } },
       { fps: 10, qrbox: 250 },
       (decodedText, decodedResult) => {
         document.getElementById('leitor-codigo').value = decodedText;
@@ -310,6 +377,7 @@ document.getElementById('btn-camera').addEventListener('click', function () {
         html5QrCode.stop().then(() => {
           cameraDiv.style.display = 'none';
           cameraAtiva = false;
+          // NÃO remova o botão aqui!
         });
       },
       (errorMessage) => {
@@ -319,9 +387,10 @@ document.getElementById('btn-camera').addEventListener('click', function () {
       alert("Erro ao acessar a câmera: " + err);
       cameraDiv.style.display = 'none';
       cameraAtiva = false;
+      // NÃO remova o botão aqui!
     });
   }
-});
+}
 
 // Fechar a câmera ao clicar fora
 document.addEventListener('click', function (event) {
@@ -335,10 +404,14 @@ document.addEventListener('click', function (event) {
       html5QrCode.stop().then(() => {
         cameraDiv.style.display = 'none';
         cameraAtiva = false;
+        const btnTrocar = document.getElementById('btn-trocar-camera');
+        if (btnTrocar) btnTrocar.remove();
       });
     } else {
       cameraDiv.style.display = 'none';
       cameraAtiva = false;
+      const btnTrocar = document.getElementById('btn-trocar-camera');
+      if (btnTrocar) btnTrocar.remove();
     }
   }
 });

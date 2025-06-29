@@ -265,4 +265,4 @@ def finalizar_venda():
     return jsonify({'mensagem': 'Venda registrada com sucesso!', 'venda_id': venda_id})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", ssl_context=("cert.pem", "key.pem"))

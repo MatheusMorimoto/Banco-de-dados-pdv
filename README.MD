@@ -105,3 +105,5 @@ git push origin main - Envie para o repositório remoto:
 
 auto-py-to-exe - sso abrirá a interface gráfica do programa.
 depois indica na onde esta o app.py
+
+

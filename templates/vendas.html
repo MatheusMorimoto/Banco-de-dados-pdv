@@ -33,6 +33,7 @@
     <button id="btn-leitor-enter" type="button" class="btn-leitor">Adicionar</button>
     <button id="btn-camera">Ler com câmera</button>
     <div id="camera-leitor" style="display:none; margin-top:10px;"></div>
+    <video id="camera-leitor-video" width="320" height="240" autoplay style="display:block"></video>
   </div>
 
   <div class="vendas-container">
@@ -69,7 +70,7 @@
       </div>
     </div>
   </div>
-
+  <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
   <script src="{{ url_for('static', filename='vendas.js') }}"></script>
 </body>

@@ -37,7 +37,7 @@ obs: inicie o pojeto dentro da pasta com o nome.html, sendo o nome(qualquer um q
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Olá, Matheus!</h1>
+    <h1>Olá, pessoa!</h1>
     <p>Seu app Flask está funcionando!</p>
 </body>
 </html>

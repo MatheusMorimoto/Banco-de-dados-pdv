@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Meu Sistema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='relatorio.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li class="dropdown">
+        <a href="{{ url_for('vendas') }}">Vendas</a>
+      </li>
+      <li class="dropdown">
+        <a href="{{ url_for('cadastro') }}">Cadastro de produtos</a>
+      </li>
+      <li class="dropdown">
+        <a href="#">Dashboard</a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('Relatorio') }}">Relatório de Venda</a></li>
+          <li><a href="#">Estoque</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Formulário de Filtro por Data -->
+  <form method="GET" action="{{ url_for('Relatorio') }}" style="margin: 20px;">
+    <label for="mes">Mês:</label>
+    <select name="mes" id="mes">
+      <option value="">Todos</option>
+      {% for num, nome in [('01','Janeiro'),('02','Fevereiro'),('03','Março'),('04','Abril'),('05','Maio'),('06','Junho'),('07','Julho'),('08','Agosto'),('09','Setembro'),('10','Outubro'),('11','Novembro'),('12','Dezembro')] %}
+        <option value="{{ num }}" {% if mes == num %}selected{% endif %}>{{ nome }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="dia">Dia:</label>
+    <input type="number" name="dia" id="dia" min="1" max="31" value="{{ dia or '' }}">
+
+    <button type="submit">Filtrar</button>
+  </form>
+
+  <!-- Canvases dos gráficos -->
+  <canvas id="graficoVendas"></canvas>
+  <canvas id="graficoVendasMensais"></canvas>
+
+  <!-- Variáveis globais passadas pelo Flask -->
+  <script>
+    const produtos = {{ produtos | default([]) | tojson }};
+    const quantidades = {{ quantidades | default([]) | tojson }};
+    const meses = {{ meses | default([]) | tojson }};
+    const vendasMensais = {{ vendas_mensais | default([]) | tojson }};
+  </script>
+
+  <!-- Script externo dos gráficos -->
+  <script src="{{ url_for('static', filename='relatorio.js') }}"></script>
+</body>
+</html>

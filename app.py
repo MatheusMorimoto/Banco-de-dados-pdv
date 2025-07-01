@@ -16,15 +16,66 @@ mysql = MySQL(app)
 @app.route('/')
 def sobre():
     return render_template('vendas.html')
+@app.route('/vendas')
+def vendas():
+    return render_template('vendas.html')
 
 @app.route('/cadastro')
 def cadastro():
     return render_template('cadastro.html')
 
-@app.route('/vendas')
-def vendas():
-    return render_template('vendas.html')
+@app.route('/relatorio')
+def Relatorio():
+    mes = request.args.get('mes')
+    dia = request.args.get('dia')
 
+    cursor = mysql.connection.cursor()
+
+    # 1. Consulta: produtos mais vendidos com filtro por mês e dia (se houver)
+    query = """
+        SELECT iv.nome, SUM(iv.quantidade) AS total_quantidade
+        FROM itens_venda iv
+        JOIN vendas v ON iv.venda_id = v.id
+        WHERE 1=1
+    """
+    params = []
+
+    if mes:
+        query += " AND MONTH(v.data_venda) = %s"
+        params.append(int(mes))
+    if dia:
+        query += " AND DAY(v.data_venda) = %s"
+        params.append(int(dia))
+
+    query += " GROUP BY iv.nome ORDER BY total_quantidade DESC"
+
+    cursor.execute(query, params)
+    resultados = cursor.fetchall()
+    nomes_produtos = [linha[0] for linha in resultados]
+    quantidades = [int(linha[1]) for linha in resultados]
+
+    # 2. Consulta: vendas mensais (sem filtro, para o gráfico de linha)
+    cursor.execute("""
+        SELECT DATE_FORMAT(data_venda, '%m/%Y') AS mes, SUM(total) AS total_mensal
+        FROM vendas
+        GROUP BY mes
+        ORDER BY STR_TO_DATE(mes, '%m/%Y')
+    """)
+    resultados_mensais = cursor.fetchall()
+    cursor.close()
+
+    meses = [linha[0] for linha in resultados_mensais]
+    vendas_mensais = [float(linha[1]) for linha in resultados_mensais]
+
+    return render_template(
+        'relatorio.html',
+        produtos=nomes_produtos,
+        quantidades=quantidades,
+        meses=meses,
+        vendas_mensais=vendas_mensais,
+        mes=mes,
+        dia=dia
+    )
 # Cadastro de produto
 @app.route('/api/produtos', methods=['POST'])
 def cadastrar_produto():
@@ -67,6 +118,7 @@ def cadastrar_produto():
     mysql.connection.commit()
     cursor.close()
     return jsonify({'mensagem': 'Produto registrado com sucesso!'})
+
 
 # Listar produtos
 @app.route('/api/produtos', methods=['GET'])
@@ -265,4 +317,4 @@ def finalizar_venda():
     return jsonify({'mensagem': 'Venda registrada com sucesso!', 'venda_id': venda_id})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", ssl_context=("cert.pem", "key.pem"))
+    app.run(debug=True)

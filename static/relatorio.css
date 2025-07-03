@@ -4,6 +4,8 @@ body {
   padding: 20px;
   background-color: #f5f5f5;
   padding-left: 240px;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 /* Menu lateral fixo */
@@ -52,9 +54,74 @@ nav ul li:hover .dropdown-menu {
   display: block;
 }
 
+/* Container principal dos gráficos */
+.area-graficos {
+  display: flex;
+  gap: 30px;
+  min-width: max-content;
+}
+
+/* Gráficos menores ao lado do menu */
 canvas {
   display: block;
-  margin: 40px auto;
-  max-width: 800px;
-  height: auto;
+  margin: 20px 0;
+  width: 600px;
+  height: 300px;
+}
+
+/* Container para os gráficos */
+.grafico-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: fit-content;
+  flex-shrink: 0;
+}
+
+.grafico-container h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+}
+
+/* Container do resumo financeiro */
+.resumo-financeiro {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.resumo-financeiro h3 {
+  margin-top: 0;
+  color: #333;
+  text-align: center;
+  border-bottom: 2px solid gold;
+  padding-bottom: 10px;
+}
+
+.item-resumo {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-resumo:last-child {
+  border-bottom: none;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.item-resumo.negativo {
+  color: #e74c3c;
+}
+
+.valor {
+  font-weight: bold;
 }

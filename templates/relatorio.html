@@ -19,7 +19,7 @@
       <li class="dropdown">
         <a href="#">Dashboard</a>
         <ul class="dropdown-menu">
-          <li><a href="{{ url_for('Relatorio') }}">Relatório de Venda</a></li>
+          <li><a href="{{ url_for('relatorio') }}">Relatório de Venda</a></li>
           <li><a href="#">Estoque</a></li>
         </ul>
       </li>
@@ -27,7 +27,7 @@
   </nav>
 
   <!-- Formulário de Filtro por Data -->
-  <form method="GET" action="{{ url_for('Relatorio') }}" style="margin: 20px;">
+  <form method="GET" action="{{ url_for('relatorio') }}" style="margin: 20px;">
     <label for="mes">Mês:</label>
     <select name="mes" id="mes">
       <option value="">Todos</option>
@@ -42,19 +42,44 @@
     <button type="submit">Filtrar</button>
   </form>
 
-  <!-- Canvases dos gráficos -->
-  <canvas id="graficoVendas"></canvas>
-  <canvas id="graficoVendasMensais"></canvas>
+  <!-- Gráficos -->
+  <div class="area-graficos">
+    <div class="grafico-container">
+      <h3>Produtos Mais Vendidos</h3>
+      <canvas id="graficoVendas"></canvas>
+    </div>
+    
+    <div class="grafico-container">
+      <h3>Vendas Mensais</h3>
+      <canvas id="graficoVendasMensais"></canvas>
+    </div>
 
-  <!-- Variáveis globais passadas pelo Flask -->
+    <!-- Resumo Financeiro -->
+<div class="resumo-financeiro">
+  <h3>Resumo Financeiro</h3>
+  <div class="item-resumo">
+    <span>Custo Total:</span>
+    <span class="valor" id="custoTotal">R$ {{ "%.2f"|format(custo_total) }}</span>
+  </div>
+  <div class="item-resumo">
+    <span>Total Vendas:</span>
+    <span class="valor" id="totalVendas">R$ {{ "%.2f"|format(total_vendas) }}</span>
+  </div>
+  <div class="item-resumo">
+    <span>Lucro Previsto:</span>
+    <span class="valor" id="lucroPrevisto">R$ {{ "%.2f"|format(lucro_previsto) }}</span>
+  </div>
+</div>
+
+  <!-- Dados para uso em JavaScript -->
   <script>
-    const produtos = {{ produtos | default([]) | tojson }};
-    const quantidades = {{ quantidades | default([]) | tojson }};
-    const meses = {{ meses | default([]) | tojson }};
-    const vendasMensais = {{ vendas_mensais | default([]) | tojson }};
+    const produtos = {{ produtos|tojson }};
+    const quantidades = {{ quantidades|tojson }};
+    const meses = {{ meses|tojson }};
+    const vendasMensais = {{ vendas_mensais|tojson }};
   </script>
 
-  <!-- Script externo dos gráficos -->
+  <!-- Script dos gráficos -->
   <script src="{{ url_for('static', filename='relatorio.js') }}"></script>
 </body>
 </html>

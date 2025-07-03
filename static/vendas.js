@@ -291,10 +291,56 @@ function calcularTroco() {
 }
 
 function finalizarVenda() {
-  alert('Venda finalizada! (implemente o backend para processar)');
-  carrinho = [];
-  atualizarCarrinho();
-  document.getElementById('popup-pagamento').style.display = 'none';
+  if (carrinho.length === 0) {
+    alert('Carrinho vazio!');
+    return;
+  }
+
+  const forma = document.getElementById('formaPagamento').value;
+  const total = carrinho.reduce((acc, item) => acc + item.preco_unitario_venda * item.quantidade, 0);
+  const valorRecebido = parseFloat(document.getElementById('valorRecebido')?.value || 0);
+  const troco = forma === 'dinheiro' ? Math.max(0, valorRecebido - total) : 0;
+
+  // Prepara dados da venda
+  const dadosVenda = {
+    forma_pagamento: forma,
+    total: total,
+    troco: troco,
+    itens: carrinho.map(item => ({
+      produto_id: item.id,
+      nome: item.nome,
+      preco_unitario: item.preco_unitario_venda,
+      quantidade: item.quantidade,
+      subtotal: item.preco_unitario_venda * item.quantidade
+    }))
+  };
+
+  // Envia para o backend
+  fetch('/finalizar-venda', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dadosVenda)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.mensagem) {
+      alert(`Venda finalizada com sucesso! ID: ${data.venda_id}`);
+      carrinho = [];
+      atualizarCarrinho();
+      document.getElementById('popup-pagamento').style.display = 'none';
+      
+      // Recarrega produtos para atualizar estoque
+      location.reload();
+    } else {
+      alert('Erro ao finalizar venda: ' + (data.erro || 'Erro desconhecido'));
+    }
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    alert('Erro ao conectar com o servidor');
+  });
 }
 
 // --- ATUALIZAÇÃO DO LEITOR DE CÂMERA ---

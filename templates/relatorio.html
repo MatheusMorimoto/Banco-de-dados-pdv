@@ -20,7 +20,7 @@
         <a href="#">Dashboard</a>
         <ul class="dropdown-menu">
           <li><a href="{{ url_for('relatorio') }}">Relatório de Venda</a></li>
-          <li><a href="#">Estoque</a></li>
+          <li><a href="{{ url_for('estoque') }}">Estoque</a></li>
         </ul>
       </li>
     </ul>
@@ -42,42 +42,51 @@
     <button type="submit">Filtrar</button>
   </form>
 
-  <!-- Gráficos -->
-  <div class="area-graficos">
-    <div class="grafico-container">
-      <h3>Produtos Mais Vendidos</h3>
-      <canvas id="graficoVendas"></canvas>
+<div class="area-graficos">
+  <!-- Linha de cima -->
+  <div class="resumo-financeiro">
+    <h3>Resumo Financeiro</h3>
+    <div class="item-resumo">
+      <span>Custo Total</span>
+      <span class="valor">R$ {{ '%.2f' | format(custo_total) }}</span>
     </div>
-    
-    <div class="grafico-container">
-      <h3>Vendas Mensais</h3>
-      <canvas id="graficoVendasMensais"></canvas>
+    <div class="item-resumo">
+      <span>Total Vendas</span>
+      <span class="valor">R$ {{ '%.2f' | format(total_vendas) }}</span>
     </div>
+    <div class="item-resumo">
+      <span>Lucro Previsto</span>
+      <span class="valor {% if lucro_previsto < 0 %}negativo{% endif %}">
+        R$ {{ '%.2f' | format(lucro_previsto) }}
+      </span>
+    </div>
+  </div>
 
-    <!-- Resumo Financeiro -->
-<div class="resumo-financeiro">
-  <h3>Resumo Financeiro</h3>
-  <div class="item-resumo">
-    <span>Custo Total:</span>
-    <span class="valor" id="custoTotal">R$ {{ "%.2f"|format(custo_total) }}</span>
+  <div class="grafico-container">
+    <h3>Formas de Pagamento</h3>
+    <canvas id="graficoFormasPagamento"></canvas>
   </div>
-  <div class="item-resumo">
-    <span>Total Vendas:</span>
-    <span class="valor" id="totalVendas">R$ {{ "%.2f"|format(total_vendas) }}</span>
+
+  <!-- Linha de baixo -->
+  <div class="grafico-container">
+    <h3>Produtos Mais Vendidos</h3>
+    <canvas id="graficoVendas"></canvas>
   </div>
-  <div class="item-resumo">
-    <span>Lucro Previsto:</span>
-    <span class="valor" id="lucroPrevisto">R$ {{ "%.2f"|format(lucro_previsto) }}</span>
+
+  <div class="grafico-container">
+    <h3>Vendas Mensais</h3>
+    <canvas id="graficoVendasMensais"></canvas>
   </div>
 </div>
-
   <!-- Dados para uso em JavaScript -->
-  <script>
-    const produtos = {{ produtos|tojson }};
-    const quantidades = {{ quantidades|tojson }};
-    const meses = {{ meses|tojson }};
-    const vendasMensais = {{ vendas_mensais|tojson }};
-  </script>
+ <script>
+  const produtos = {{ produtos | tojson }};
+  const quantidades = {{ quantidades | tojson }};
+  const meses = {{ meses | tojson }};
+  const vendasMensais = {{ vendas_mensais | tojson }};
+  const formasPagamento = {{ formas_pagamento | tojson }};
+  const qtdPagamentos = {{ qtd_pagamentos | tojson }};
+</script>
 
   <!-- Script dos gráficos -->
   <script src="{{ url_for('static', filename='relatorio.js') }}"></script>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Meu Sistema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='estoque.css') }}">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li class="dropdown">
+        <a href="{{ url_for('vendas') }}">Vendas</a>
+      </li>
+      <li class="dropdown">
+        <a href="{{ url_for('cadastro') }}">Cadastro de produtos</a>
+      </li>
+      <li class="dropdown">
+        <a href="#">Dashboard</a>
+        <ul class="dropdown-menu">
+          <li><a href="{{ url_for('relatorio') }}">Relatório de Venda</a></li>
+          <li><a href="{{ url_for('estoque') }}">Estoque</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</body>
+</html>

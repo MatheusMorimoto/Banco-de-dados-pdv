@@ -5,7 +5,8 @@ body {
   background-color: #f5f5f5;
   padding-left: 240px;
   overflow-x: auto;
-  white-space: nowrap;
+  white-space: normal;
+
 }
 
 /* Menu lateral fixo */
@@ -55,19 +56,20 @@ nav ul li:hover .dropdown-menu {
 }
 
 /* Container principal dos gráficos */
-.area-graficos {
-  display: flex;
-  gap: 30px;
-  min-width: max-content;
+.grafico-container {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  padding: 15px;
 }
+
 
 /* Gráficos menores ao lado do menu */
 canvas {
-  display: block;
-  margin: 20px 0;
-  width: 600px;
-  height: 300px;
+  width: 100% !important;
+  height: 250px !important;
 }
+
 
 /* Container para os gráficos */
 .grafico-container {
@@ -124,4 +126,26 @@ canvas {
 
 .valor {
   font-weight: bold;
+}
+
+.area-graficos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.grafico-container,
+.resumo-financeiro {
+  min-width: 350px;
+}
+
+.area-graficos > div {
+  width: 100%;
+  max-width: 500px;
+  min-width: 300px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

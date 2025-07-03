@@ -77,7 +77,7 @@ pip install flask
 
 agora podendo executar a aplicação feita com o caomando:
 flask run - comando do propio flask para executar
-python app.py - comando do python para exeutar 
+python app.py- comando do python para exeutar 
 
 10) para integrar o MySQL ao flask inslao alguns pip:
 

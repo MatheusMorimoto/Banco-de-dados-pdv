@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Funções globais acessíveis via HTML onclick
 window.carregarRelatorio = function () {
-  fetch('/api/relatorio')
+  fetch('/api/relatorio-produtos')  // ✅ Rota correta
     .then(res => res.json())
     .then(produtos => {
       const tabela = document.getElementById("productTableBody");
@@ -256,6 +256,7 @@ window.carregarRelatorio = function () {
           <td>R$ ${parseFloat(p.preco_final_fardo).toFixed(2)}</td>
           <td>${p.total_unidades}</td>
           <td>R$ ${parseFloat(p.preco_unitario_venda).toFixed(2)}</td>
+          <td>R$ ${parseFloat(p.preco_custo || 0).toFixed(2)}</td>
         `;
         tabela.appendChild(linha);
       });
@@ -270,6 +271,7 @@ window.registerProduct = function () {
   const precoUnit = parseFloat(document.getElementById("finalUnitPrice").value) || 0;
   const qtdFardos = parseInt(document.getElementById("packageQty").value) || 0;
   const qtdTotalUnidades = parseInt(document.getElementById("totalUnits").value) || 0;
+  const custoUnitario = parseFloat(document.getElementById("unitCost").value) || 0; // ✅ PEGA O CUSTO
 
   if (!nome || !codigo || precoFardo <= 0 || precoUnit <= 0 || qtdFardos <= 0 || qtdTotalUnidades <= 0) {
     alert("Preencha todos os campos corretamente antes de cadastrar.");
@@ -285,7 +287,8 @@ window.registerProduct = function () {
       quantidade_fardos: qtdFardos,
       preco_final_fardo: precoFardo,
       total_unidades: qtdTotalUnidades,
-      preco_unitario_venda: precoUnit
+      preco_unitario_venda: precoUnit,
+      preco_custo: custoUnitario  // ✅ ADICIONA O CUSTO
     })
   })
     .then(response => {
@@ -392,6 +395,7 @@ window.salvarAlteracoesPopup = function () {
   const preco_final_fardo = parseFloat(document.getElementById("editPrecoFardo").value) || 0;
   const total_unidades = parseInt(document.getElementById("editTotalUnidades").value) || 0;  
   const preco_unitario_venda = parseFloat(document.getElementById("editPrecoUnit").value) || 0;
+  const preco_custo = parseFloat(document.getElementById("editUnitCost").value) || 0; // ✅ ADICIONA O CUSTO
 
   if (!barcode) {
     alert("Preencha o campo Código de Barras.");
@@ -406,7 +410,8 @@ window.salvarAlteracoesPopup = function () {
       quantidade_fardos,
       preco_final_fardo,
       total_unidades,
-      preco_unitario_venda
+      preco_unitario_venda,
+      preco_custo  // ✅ INCLUI O CUSTO
     })
   })
     .then(res => {

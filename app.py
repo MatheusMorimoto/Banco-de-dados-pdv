@@ -25,76 +25,102 @@ def vendas():
 def cadastro():
     return render_template('cadastro.html')
 
+@app.route('/estoque')
+def estoque():
+    return render_template('estoque.html')
+
 @app.route('/relatorio')
 def relatorio():
+    from flask import request, render_template
+    from decimal import Decimal
+
     mes = request.args.get('mes')
     dia = request.args.get('dia')
 
-    cursor = mysql.connection.cursor()
+    with mysql.connection.cursor() as cursor:
+        # Consulta 1: Produtos vendidos
+        query = """
+            SELECT iv.nome, 
+                   SUM(iv.quantidade) AS total_quantidade,
+                   COALESCE(p.preco_custo, 0) AS preco_custo,
+                   iv.preco_unitario,
+                   iv.produto_id
+            FROM itens_venda iv
+            JOIN vendas v ON iv.venda_id = v.id
+            JOIN produtos p ON iv.produto_id = p.id
+            WHERE 1=1
+        """
+        params = []
+        if mes and mes.isdigit():
+            query += " AND MONTH(v.data_venda) = %s"
+            params.append(int(mes))
+        if dia and dia.isdigit():
+            query += " AND DAY(v.data_venda) = %s"
+            params.append(int(dia))
 
-    query = """
-        SELECT iv.nome, 
-               SUM(iv.quantidade) AS total_quantidade,
-               COALESCE(p.preco_custo, 0) AS preco_custo,
-               iv.preco_unitario,
-               iv.produto_id
-        FROM itens_venda iv
-        JOIN vendas v ON iv.venda_id = v.id
-        JOIN produtos p ON iv.produto_id = p.id
-        WHERE 1=1
-    """
-    params = []
-    if mes:
-        query += " AND MONTH(v.data_venda) = %s"
-        params.append(int(mes))
-    if dia:
-        query += " AND DAY(v.data_venda) = %s"
-        params.append(int(dia))
+        query += """
+            GROUP BY iv.nome, p.preco_custo, iv.preco_unitario, iv.produto_id
+            ORDER BY total_quantidade DESC
+        """
 
-    query += " GROUP BY iv.nome, p.preco_custo, iv.preco_unitario, iv.produto_id ORDER BY total_quantidade DESC"
+        cursor.execute(query, params)
+        resultados = cursor.fetchall()
 
-    cursor.execute(query, params)
-    resultados = cursor.fetchall()
+        nomes_produtos = []
+        quantidades = []
+        custo_total_vendidos = 0
+        receita_total_vendas = 0
 
-    nomes_produtos = []
-    quantidades = []
-    custo_total_vendidos = 0
-    receita_total_vendas = 0
+        if resultados:
+            for nome, qtd, preco_custo, preco_venda, _ in resultados:
+                qtd = int(qtd)
+                preco_custo = float(preco_custo) if preco_custo is not None else 0.0
+                preco_venda = float(preco_venda)
 
-    for linha in resultados:
-        nome = linha[0]
-        qtd_vendida = int(linha[1])
-        preco_custo = float(linha[2]) if linha[2] is not None else 0.0
-        preco_venda = float(linha[3])
+                nomes_produtos.append(nome)
+                quantidades.append(qtd)
+                custo_total_vendidos += preco_custo * qtd
+                receita_total_vendas += preco_venda * qtd
+        else:
+            nomes_produtos = ['Sem vendas']
+            quantidades = [0]
 
-        nomes_produtos.append(nome)
-        quantidades.append(qtd_vendida)
+        lucro_real = receita_total_vendas - custo_total_vendidos
 
-        custo_total_vendidos += preco_custo * qtd_vendida
-        receita_total_vendas += preco_venda * qtd_vendida
+        # Consulta 2: Vendas mensais
+        cursor.execute("""
+            SELECT DATE_FORMAT(data_venda, '%m/%Y') AS mes, 
+                   SUM(total) AS total_mensal
+            FROM vendas
+            GROUP BY mes
+            ORDER BY STR_TO_DATE(mes, '%m/%Y')
+        """)
+        resultados_mensais = cursor.fetchall()
 
-    lucro_real = receita_total_vendas - custo_total_vendidos
+        meses = [linha[0] for linha in resultados_mensais] if resultados_mensais else ['Sem dados']
+        vendas_mensais = [float(linha[1]) for linha in resultados_mensais] if resultados_mensais else [0]
 
-    # Vendas mensais para gráfico
-    cursor.execute("""
-        SELECT DATE_FORMAT(data_venda, '%m/%Y') AS mes, 
-               SUM(total) AS total_mensal
-        FROM vendas
-        GROUP BY mes
-        ORDER BY STR_TO_DATE(mes, '%m/%Y')
-    """)
-    resultados_mensais = cursor.fetchall()
-    cursor.close()
+        # Consulta 3: Formas de pagamento
+        cursor.execute("""
+            SELECT forma_pagamento, COUNT(*) as quantidade
+            FROM vendas
+            GROUP BY forma_pagamento
+            ORDER BY quantidade DESC
+        """)
+        resultados_pagamento = cursor.fetchall()
 
-    meses = [linha[0] for linha in resultados_mensais]
-    vendas_mensais = [float(linha[1]) for linha in resultados_mensais]
+        formas_pagamento = [linha[0] for linha in resultados_pagamento] if resultados_pagamento else ['Sem dados']
+        qtd_pagamentos = [int(linha[1]) for linha in resultados_pagamento] if resultados_pagamento else [0]
 
+    # Renderiza o template com todos os dados
     return render_template(
         'relatorio.html',
         produtos=nomes_produtos,
         quantidades=quantidades,
         meses=meses,
         vendas_mensais=vendas_mensais,
+        formas_pagamento=formas_pagamento,
+        qtd_pagamentos=qtd_pagamentos,
         mes=mes,
         dia=dia,
         custo_total=custo_total_vendidos,

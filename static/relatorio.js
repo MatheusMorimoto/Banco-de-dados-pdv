@@ -1,13 +1,13 @@
-window.onload = function () {
-  // Gráfico: Formas de Pagamento
+ window.onload = function () {
+  // ✅ Gráfico: Formas de Pagamento (BARRAS)
   const ctx3 = document.getElementById('graficoFormasPagamento')?.getContext('2d');
-  if (ctx3 && formasPagamento.length && qtdPagamentos.length) {
+  if (ctx3 && formasPagamento && formasPagamento.length && qtdPagamentos && qtdPagamentos.length) {
     new Chart(ctx3, {
-      type: 'bar',
+      type: 'bar',  // ✅ Mudou de 'pie' para 'bar'
       data: {
         labels: formasPagamento,
         datasets: [{
-          label: 'Formas de Pagamento',
+          label: 'Quantidade de Vendas',
           data: qtdPagamentos,
           backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
           borderColor: 'black',
@@ -22,7 +22,7 @@ window.onload = function () {
   }
 
   // Gráfico: Vendas Mensais
-const ctx2 = document.getElementById('graficoVendasMensais');
+  const ctx2 = document.getElementById('graficoVendasMensais');
   if (ctx2 && meses && meses.length > 0 && vendasMensais && vendasMensais.length > 0) {
     new Chart(ctx2, {
       type: 'bar',
@@ -41,37 +41,48 @@ const ctx2 = document.getElementById('graficoVendasMensais');
         scales: { y: { beginAtZero: true } }
       }
     });
-    console.log('✅ Gráfico vendas mensais criado');
-  } else {
-    console.log('❌ Sem dados para vendas mensais:', { meses, vendasMensais });
   }
 
-
-  // Gráfico: Produtos Detalhados (quantidade por nome)
-  const ctx1 = document.getElementById('graficoVendas')?.getContext('2d');
-  if (ctx1 && produtos.length) {
-    new Chart(ctx1, {
+  // Gráfico: Produtos Mais Vendidos (BARRAS)
+  const ctx4 = document.getElementById('graficoProdutosVendidos')?.getContext('2d');
+  if (ctx4 && produtos && produtos.length > 0) {
+    new Chart(ctx4, {
       type: 'bar',
       data: {
         labels: produtos.map(p => p.nome),
         datasets: [{
           label: 'Quantidade Vendida',
           data: produtos.map(p => p.quantidade),
-          backgroundColor: 'gold',
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB', 
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+            '#FF9F40',
+            '#C9CBCF'
+          ],
           borderColor: 'black',
           borderWidth: 1
         }]
       },
       options: {
         responsive: true,
-        scales: { y: { beginAtZero: true } }
+        scales: { 
+          y: { beginAtZero: true },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 0
+            }
+          }
+        }
       }
     });
   }
 };
 
-  // Outros gráficos continuam igual...
-
+// PDF continua igual...
 const btnTexto = document.getElementById('btnPDFTexto');
 if (btnTexto) {
   btnTexto.addEventListener('click', () => {

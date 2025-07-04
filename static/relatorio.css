@@ -6,7 +6,6 @@ body {
   padding-left: 240px;
   overflow-x: auto;
   white-space: normal;
-
 }
 
 /* Menu lateral fixo */
@@ -55,58 +54,64 @@ nav ul li:hover .dropdown-menu {
   display: block;
 }
 
-/* Container principal dos gráficos */
-.grafico-container {
-  width: 100%;
-  max-width: 480px;
-  height: auto;
-  padding: 15px;
-}
-
-
-/* Gráficos menores ao lado do menu */
-canvas {
-  width: 100% !important;
-  height: 250px !important;
-}
-
-
-/* Container para os gráficos */
-.grafico-container {
+/* ✅ Resumo financeiro no topo */
+.resumo-financeiro.topo {
   background: white;
   border-radius: 8px;
   padding: 20px;
-  margin-bottom: 30px;
+  margin: 20px 0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  width: fit-content;
-  flex-shrink: 0;
+  width: calc(100% - 40px);
 }
 
-.grafico-container h3 {
-  margin-top: 0;
-  color: #333;
-  text-align: center;
+/* ✅ Layout em grid 2x2 */
+.area-graficos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px;
 }
 
-/* Container do resumo financeiro */
+/* ✅ Todos os containers com mesmo tamanho */
+.grafico-container,
 .resumo-financeiro {
   background: white;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 30px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  width: 300px;
-  flex-shrink: 0;
+  min-width: 300px;
+  max-width: 400px;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+.grafico-container ul {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.grafico-container h3,
 .resumo-financeiro h3 {
   margin-top: 0;
   color: #333;
   text-align: center;
+}
+
+.resumo-financeiro h3 {
   border-bottom: 2px solid gold;
   padding-bottom: 10px;
 }
 
+/* ✅ Canvas com tamanho uniforme */
+canvas {
+  width: 100% !important;
+  height: 250px !important;
+}
+
+/* Resumo financeiro */
 .item-resumo {
   display: flex;
   justify-content: space-between;
@@ -128,24 +133,20 @@ canvas {
   font-weight: bold;
 }
 
-.area-graficos {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  padding: 20px;
+/* ✅ Responsivo para telas menores */
+@media (max-width: 1200px) {
+  .area-graficos {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.grafico-container,
-.resumo-financeiro {
-  min-width: 350px;
-}
-
-.area-graficos > div {
-  width: 100%;
-  max-width: 500px;
-  min-width: 300px;
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+@media (max-width: 800px) {
+  .area-graficos {
+    grid-template-columns: 1fr;
+  }
+  
+  .resumo-financeiro.topo {
+    width: calc(100% - 20px);
+    margin: 10px 0;
+  }
 }

@@ -32,13 +32,11 @@ def estoque():
 @app.route('/relatorio')
 def relatorio():
     from flask import request, render_template
-    from decimal import Decimal
-
     mes = request.args.get('mes')
     dia = request.args.get('dia')
 
     with mysql.connection.cursor() as cursor:
-        # Consulta 1: Produtos vendidos
+        # Consulta 1: Produtos vendidos detalhados
         query = """
             SELECT iv.nome, 
                    SUM(iv.quantidade) AS total_quantidade,
@@ -62,28 +60,43 @@ def relatorio():
             GROUP BY iv.nome, p.preco_custo, iv.preco_unitario, iv.produto_id
             ORDER BY total_quantidade DESC
         """
-
         cursor.execute(query, params)
         resultados = cursor.fetchall()
 
-        nomes_produtos = []
-        quantidades = []
+        produtos_detalhados = []
         custo_total_vendidos = 0
         receita_total_vendas = 0
 
         if resultados:
             for nome, qtd, preco_custo, preco_venda, _ in resultados:
                 qtd = int(qtd)
-                preco_custo = float(preco_custo) if preco_custo is not None else 0.0
+                preco_custo = float(preco_custo or 0)
                 preco_venda = float(preco_venda)
+                total_custo = preco_custo * qtd
+                total_venda = preco_venda * qtd
+                lucro = total_venda - total_custo
 
-                nomes_produtos.append(nome)
-                quantidades.append(qtd)
-                custo_total_vendidos += preco_custo * qtd
-                receita_total_vendas += preco_venda * qtd
+                produtos_detalhados.append({
+                    "nome": nome,
+                    "quantidade": qtd,
+                    "preco_custo": preco_custo,
+                    "preco_venda": preco_venda,
+                    "total_custo": total_custo,
+                    "total_venda": total_venda,
+                    "lucro": lucro
+                })
+                custo_total_vendidos += total_custo
+                receita_total_vendas += total_venda
         else:
-            nomes_produtos = ['Sem vendas']
-            quantidades = [0]
+            produtos_detalhados = [{
+                "nome": "Sem vendas",
+                "quantidade": 0,
+                "preco_custo": 0,
+                "preco_venda": 0,
+                "total_custo": 0,
+                "total_venda": 0,
+                "lucro": 0
+            }]
 
         lucro_real = receita_total_vendas - custo_total_vendidos
 
@@ -96,9 +109,8 @@ def relatorio():
             ORDER BY STR_TO_DATE(mes, '%m/%Y')
         """)
         resultados_mensais = cursor.fetchall()
-
-        meses = [linha[0] for linha in resultados_mensais] if resultados_mensais else ['Sem dados']
-        vendas_mensais = [float(linha[1]) for linha in resultados_mensais] if resultados_mensais else [0]
+        meses = [linha[0] for linha in resultados_mensais] if resultados_mensais else []
+        vendas_mensais = [float(linha[1]) for linha in resultados_mensais] if resultados_mensais else []
 
         # Consulta 3: Formas de pagamento
         cursor.execute("""
@@ -108,15 +120,12 @@ def relatorio():
             ORDER BY quantidade DESC
         """)
         resultados_pagamento = cursor.fetchall()
+        formas_pagamento = [linha[0] for linha in resultados_pagamento] if resultados_pagamento else []
+        qtd_pagamentos = [int(linha[1]) for linha in resultados_pagamento] if resultados_pagamento else []
 
-        formas_pagamento = [linha[0] for linha in resultados_pagamento] if resultados_pagamento else ['Sem dados']
-        qtd_pagamentos = [int(linha[1]) for linha in resultados_pagamento] if resultados_pagamento else [0]
-
-    # Renderiza o template com todos os dados
     return render_template(
         'relatorio.html',
-        produtos=nomes_produtos,
-        quantidades=quantidades,
+        produtos=produtos_detalhados,
         meses=meses,
         vendas_mensais=vendas_mensais,
         formas_pagamento=formas_pagamento,

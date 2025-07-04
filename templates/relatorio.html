@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='relatorio.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <nav>
@@ -42,53 +44,76 @@
     <button type="submit">Filtrar</button>
   </form>
 
-<div class="area-graficos">
-  <!-- Linha de cima -->
-  <div class="resumo-financeiro">
-    <h3>Resumo Financeiro</h3>
-    <div class="item-resumo">
-      <span>Custo Total</span>
-      <span class="valor">R$ {{ '%.2f' | format(custo_total) }}</span>
-    </div>
-    <div class="item-resumo">
-      <span>Total Vendas</span>
-      <span class="valor">R$ {{ '%.2f' | format(total_vendas) }}</span>
-    </div>
-    <div class="item-resumo">
-      <span>Lucro Previsto</span>
-      <span class="valor {% if lucro_previsto < 0 %}negativo{% endif %}">
-        R$ {{ '%.2f' | format(lucro_previsto) }}
-      </span>
-    </div>
-  </div>
+  <button id="btnPDFTexto" style="margin: 20px;">📑 Gerar Relatório Escrito</button>
 
-  <div class="grafico-container">
-    <h3>Formas de Pagamento</h3>
-    <canvas id="graficoFormasPagamento"></canvas>
-  </div>
+  <div class="area-graficos">
+    <!-- Linha de cima -->
+    <div class="resumo-financeiro">
+      <h3>Resumo Financeiro</h3>
+      <div class="item-resumo">
+        <span>Custo Total</span>
+        <span class="valor">R$ {{ '%.2f' | format(custo_total) }}</span>
+      </div>
+      <div class="item-resumo">
+        <span>Total Vendas</span>
+        <span class="valor">R$ {{ '%.2f' | format(total_vendas) }}</span>
+      </div>
+      <div class="item-resumo">
+        <span>Lucro Previsto</span>
+        <span class="valor {% if lucro_previsto < 0 %}negativo{% endif %}">
+          R$ {{ '%.2f' | format(lucro_previsto) }}
+        </span>
+      </div>
+    </div>
 
-  <!-- Linha de baixo -->
-  <div class="grafico-container">
-    <h3>Produtos Mais Vendidos</h3>
-    <canvas id="graficoVendas"></canvas>
-  </div>
+    <div class="grafico-container">
+      <h3>Formas de Pagamento</h3>
+      <canvas id="graficoFormasPagamento"></canvas>
+    </div>
 
-  <div class="grafico-container">
-    <h3>Vendas Mensais</h3>
-    <canvas id="graficoVendasMensais"></canvas>
-  </div>
+    <!-- Linha de baixo -->
+    <!-- Linha de baixo -->
+<div class="grafico-container">
+  <h3>Produtos Detalhados</h3>
+  <ul style="font-size: 14px; line-height: 1.6; padding-left: 10px;">
+    {% for p in produtos %}
+      <li style="margin-bottom: 12px;">
+        <strong>{{ p.nome }}</strong> — {{ p.quantidade }} un<br>
+        <span style="display: block; margin-left: 8px;">
+          Custo unitário: R$ {{ '%.2f' | format(p.preco_custo) }} |
+          Venda unitária: R$ {{ '%.2f' | format(p.preco_venda) }}<br>
+          Total de Custo: R$ {{ '%.2f' | format(p.total_custo) }} |
+          Total de Venda: R$ {{ '%.2f' | format(p.total_venda) }}<br>
+          Lucro do Produto: <strong style="color: {{ 'red' if p.lucro < 0 else 'green' }};">
+            R$ {{ '%.2f' | format(p.lucro) }}
+          </strong>
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
-  <!-- Dados para uso em JavaScript -->
- <script>
-  const produtos = {{ produtos | tojson }};
-  const quantidades = {{ quantidades | tojson }};
-  const meses = {{ meses | tojson }};
-  const vendasMensais = {{ vendas_mensais | tojson }};
-  const formasPagamento = {{ formas_pagamento | tojson }};
-  const qtdPagamentos = {{ qtd_pagamentos | tojson }};
+    <div class="grafico-container">
+      <h3>Vendas Mensais</h3>
+      <canvas id="graficoVendasMensais"></canvas>
+    </div>
+  </div>
+
+  <!-- Variáveis para uso em JavaScript -->
+<script>
+// Variáveis do Flask
+var produtos = {{ produtos|tojson }};
+var meses = {{ meses|tojson }};
+var vendasMensais = {{ vendas_mensais|tojson }};
+var formasPagamento = {{ formas_pagamento|tojson }};
+var qtdPagamentos = {{ qtd_pagamentos|tojson }};
+var custo_total = {{ custo_total }};
+var total_vendas = {{ total_vendas }};
+var lucro_previsto = {{ lucro_previsto }};
+
+console.log('Dados carregados:', { meses, vendasMensais });
 </script>
 
-  <!-- Script dos gráficos -->
+  <!-- Script dos gráficos e PDF -->
   <script src="{{ url_for('static', filename='relatorio.js') }}"></script>
 </body>
 </html>
